@@ -30,9 +30,13 @@ class Node:
             yield node
 
     def _append(self, *nodes):
+        if len(nodes) == 1 and type(nodes[0]) is list:
+            nodes = nodes[0]
         self._children.extend(list(self._wash_nodes_hook(*nodes)))
 
     def _prepend(self, *nodes):
+        if len(nodes) == 1 and type(nodes[0]) is list:
+            nodes = nodes[0]
         self._children = list(self._wash_nodes_hook(*nodes)) + self._children
 
     @property

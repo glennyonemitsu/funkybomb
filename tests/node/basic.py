@@ -15,6 +15,10 @@ def test_adding_children():
     root._append(Node())
     assert len(root._children) == 2
 
+    children = [Node() for i in range(5)]
+    root += children
+    assert len(root._children) == 7
+
 
 def test_root():
     root = Node()
