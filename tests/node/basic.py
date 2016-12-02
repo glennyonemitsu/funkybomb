@@ -19,6 +19,11 @@ def test_adding_children():
     root += children
     assert len(root._children) == 7
 
+    specials = [Node() for i in range(3)]
+    root._prepend(specials)
+    assert len(root._children) == 10
+    assert root._children[:len(specials)] == specials
+
 
 def test_root():
     root = Node()
