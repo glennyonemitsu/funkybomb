@@ -27,11 +27,9 @@ class Node:
             yield node
 
     def _append(self, *nodes):
-        print('appending', nodes)
         self._children.extend(list(self._wash_nodes_hook(*nodes)))
         
     def _prepend(self, *nodes):
-        print('prepending', nodes)
         self._children = list(self._wash_nodes_hook(*nodes)) + self._children
 
     @property
@@ -47,8 +45,6 @@ class Renderable(Node):
         return '<RenderableNode>'
 
     def __getattr__(self, key):
-        print('getting attr', key)
-        # TODO handle not-an-attribute-anymore cases with @property
         n = Tag(key)
         self._append(n)
         return n
@@ -94,11 +90,9 @@ class Template(Renderable):
 
     def __iter__(self):
         if self._name in self._root._content:
-            print('template child is in root') 
             contents = self._root._content[self._name]
         else:
             contents = self._children
-            print('template child is default', contents)
 
         for node in contents:
             yield node
