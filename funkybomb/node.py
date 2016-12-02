@@ -1,4 +1,7 @@
 class Node:
+    """
+    The building block of tree based templating.
+    """
 
     def __init__(self):
         self.__root = self
@@ -28,7 +31,7 @@ class Node:
 
     def _append(self, *nodes):
         self._children.extend(list(self._wash_nodes_hook(*nodes)))
-        
+
     def _prepend(self, *nodes):
         self._children = list(self._wash_nodes_hook(*nodes)) + self._children
 
