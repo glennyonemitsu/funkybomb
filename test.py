@@ -1,5 +1,5 @@
 from zizu import Tag, Template
-from util import render
+from util import render, freeze
 
 
 t = Template('root')
@@ -21,5 +21,10 @@ t['tmpl-10'] = 'one zero'
 t['tmpl-11'] = 'one one'
 t['tmpl-12'] = 'one two'
 
+freeze(t)
+
+t['tmpl-12'] = 'this is frozen'
+
 print(render(h, True))
+
 

@@ -20,3 +20,9 @@ def generate(node, prefix, indent, suffix):
 
 def render(node, pretty=False):
     return ''.join(generate(node, '', '    ', '\n'))
+
+
+def freeze(node):
+    node._children = tuple(node._children)
+    for child in node:
+        freeze(child)
