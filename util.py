@@ -8,7 +8,7 @@ def generate(node, prefix, indent, suffix):
     if node._opener and node._closer:
         new_prefix += indent
 
-    for child in node._children:
+    for child in node:
         for output in generate(child, new_prefix, indent, suffix):
             yield output
 

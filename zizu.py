@@ -2,11 +2,17 @@ class Node:
 
     def __init__(self):
         self.__root = self
-        self.__children = []
+        self._children = []
 
     def __iadd__(self, *nodes):
         self._append(*nodes)
         return self
+
+    def __repr__(self):
+        return '<BaseNode>'
+
+    def __iter__(self):
+        return iter(self._children)
 
     def _wash_nodes_hook(self, *nodes):
         return list(self._set_root_for_nodes(*self._wash_nodes(*nodes)))
@@ -21,15 +27,12 @@ class Node:
             yield node
 
     def _append(self, *nodes):
-        self.__children += list(self._wash_nodes_hook(*nodes))
+        print('appending', nodes)
+        self._children.extend(list(self._wash_nodes_hook(*nodes)))
         
     def _prepend(self, *nodes):
-        self.__children = list(self._wash_nodes_hook(*nodes)) + self.__children
-
-    @property
-    def _children(self):
-        for child in self.__children:
-            yield child
+        print('prepending', nodes)
+        self._children = list(self._wash_nodes_hook(*nodes)) + self._children
 
     @property
     def _root(self):
@@ -40,7 +43,12 @@ class Node:
 
 class Renderable(Node):
 
+    def __repr__(self):
+        return '<RenderableNode>'
+
     def __getattr__(self, key):
+        print('getting attr', key)
+        # TODO handle not-an-attribute-anymore cases with @property
         n = Tag(key)
         self._append(n)
         return n
@@ -73,20 +81,27 @@ class Template(Renderable):
         self._content = {}
         super().__init__()
 
+    def __repr__(self):
+        if self._name:
+            return '<TemplateNode[{name}]>'.format(name=self._name)
+        else:
+            return '<AnonymousTemplateNode>'
+
     def __setitem__(self, name, content):
         t = Template(None)
         t += content
         self._root._content[name] = t
 
-    @property
-    def _children(self):
+    def __iter__(self):
         if self._name in self._root._content:
-            for node in self._root._content[self._name]._children:
-                yield node
+            print('template child is in root') 
+            contents = self._root._content[self._name]
         else:
-            # default
-            for child in self.__children:
-                yield child
+            contents = self._children
+            print('template child is default', contents)
+
+        for node in contents:
+            yield node
 
 
 class Tag(Renderable):
@@ -95,6 +110,9 @@ class Tag(Renderable):
         self._tag = tag
         self._attrs = {}
         super().__init__()
+
+    def __repr__(self):
+        return '<TagNode[{tag}]>'.format(tag=self._tag)
 
     @property
     def _opener(self):
@@ -121,6 +139,9 @@ class Text(Renderable):
     def __init__(self, content=''):
         self._content = content
         super().__init__()
+
+    def __repr__(self):
+        return '<TextNode["{text}"]>'.format(text=self._content)
 
     @property
     def _opener(self):
