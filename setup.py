@@ -4,7 +4,7 @@ from setuptools import setup
 setup(
     name='Funky Bomb',
     version='0.1',
-    description='Quick and nervous html templating',
+    description='Quick and wild HTML tree growth',
     author='Glenn Yonemitsu',
     license='Apache License 2.0',
     packages=['funkybomb'],
