@@ -57,13 +57,6 @@ class Node:
             return self._node_attr_keys
         return self._node_attr_keys
 
-    def _is_internal_attr(self, key):
-        if key in self._node_attrs:
-            return True
-        if not hasattr(super(), '_is_internal_attr'):
-            return False
-        return super()._is_internal_attr(key)
-
     def _wash_nodes_hook(self, *nodes):
         return list(self._set_root_for_nodes(*self._wash_nodes(*nodes)))
 
@@ -99,6 +92,10 @@ class Renderable(Node):
 
     def __repr__(self):
         return '<RenderableNode>'
+
+    def __init__(self, *args, **attrs):
+        super().__init__(*args)
+        self._attrs = attrs
 
     def __getattr__(self, key):
         if key in self._node_attr_keys:
