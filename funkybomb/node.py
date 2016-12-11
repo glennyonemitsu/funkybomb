@@ -3,26 +3,70 @@ class Node:
     The building block of tree based templating.
     """
 
+    _node_attr_keys = {
+        '_children', '_tag',
+        '_attrs', '_node_attrs',
+        '_root', '_root_node'
+        # '_wash_nodes_hook', '_wash_nodes', '_set_root_for_nodes', '_append',
+
+    }
+
     def __init__(self):
-        self.__root = self
+        """
+        Initialize the Node.
+        """
+
+        self.__dict__['attrs'] = {}
+        self._root_node = self
         self._children = []
 
     def __iadd__(self, *nodes):
+        """
+        Append nodes from the += notation.
+        """
+
         self._append(*nodes)
         return self
 
     def __repr__(self):
+        """
+        String representation of the object.
+        """
+
         return '<BaseNode>'
 
     def __iter__(self):
         return iter(self._children)
+
+    def __setattr__(self, key, value):
+        if key in self._node_attr_keys:
+            self.__dict__['attrs'][key] = value
+        object.__setattr__(self, key, value)
+
+    def __getattr__(self, key):
+        if key in self._node_attr_keys:
+            return self.__dict__['attrs'][key]
+        return object.__getattr__(self, key)
+
+    @property
+    def _node_attrs(self):
+        if type(self) is Node:
+            return self._node_attr_keys
+        return self._node_attr_keys
+
+    def _is_internal_attr(self, key):
+        if key in self._node_attrs:
+            return True
+        if not hasattr(super(), '_is_internal_attr'):
+            return False
+        return super()._is_internal_attr(key)
 
     def _wash_nodes_hook(self, *nodes):
         return list(self._set_root_for_nodes(*self._wash_nodes(*nodes)))
 
     def _set_root_for_nodes(self, *nodes):
         for node in nodes:
-            node.__root = self._root
+            node._root_node = self._root
             yield node
 
     def _wash_nodes(self, *nodes):
@@ -41,17 +85,25 @@ class Node:
 
     @property
     def _root(self):
-        if self.__root is self:
+        if self._root_node is self:
             return self
-        return self.__root._root
+        return self._root_node._root
 
 
 class Renderable(Node):
+
+    _node_attr_keys = {'_opener', '_closer', '_wash_nodes'} | \
+        Node._node_attr_keys
+
+    def a__init__(self):
+        super().__init__()
 
     def __repr__(self):
         return '<RenderableNode>'
 
     def __getattr__(self, key):
+        if key in self._node_attr_keys:
+            return self.__dict__['attrs'].get(key, None)
         n = Tag(key)
         self._append(n)
         return n
@@ -79,10 +131,12 @@ class Renderable(Node):
 
 class Template(Renderable):
 
+    _node_attr_keys = {'_content', '_name'} | Renderable._node_attr_keys
+
     def __init__(self, name=None):
+        super().__init__()
         self._name = name
         self._content = {}
-        super().__init__()
 
     def __repr__(self):
         if self._name:
@@ -107,10 +161,12 @@ class Template(Renderable):
 
 class Tag(Renderable):
 
+    _node_attr_keys = {'_tag', '_attrs'} | Renderable._node_attr_keys
+
     def __init__(self, tag=None):
+        super().__init__()
         self._tag = tag
         self._attrs = {}
-        super().__init__()
 
     def __repr__(self):
         return '<TagNode[{tag}]>'.format(tag=self._tag)
@@ -137,9 +193,11 @@ class Tag(Renderable):
 
 class Text(Renderable):
 
+    _node_attr_keys = {'_content'} | Renderable._node_attr_keys
+
     def __init__(self, content=''):
-        self._content = content
         super().__init__()
+        self._content = content
 
     def __repr__(self):
         return '<TextNode["{text}"]>'.format(text=self._content)
