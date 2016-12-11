@@ -97,9 +97,6 @@ class Renderable(Node):
 
     _node_attr_keys = {'_opener', '_closer', '_wash_nodes'} | Node._node_attr_keys
 
-    def a__init__(self):
-        super().__init__()
-
     def __repr__(self):
         return '<RenderableNode>'
 
