@@ -170,27 +170,31 @@ class Tag(Renderable):
         'link', 'meta', 'param', 'source', 'track', 'wbr'
     }
 
-    def __init__(self, tag=None):
+    _raw_text_tags = {'script', 'style'}
+
+    def __init__(self, tag=None, **attrs):
         super().__init__()
         self._tag = tag
-        self._attrs = {}
+        self._attrs = attrs
 
     def __repr__(self):
         return '<TagNode[{tag}]>'.format(tag=self._tag)
 
-    def _append(self, *args, **kwargs):
+    def _wash_nodes(self, *nodes):
         if self._void:
             raise ChildNodeError()
-        return super()._append(*args, **kwargs)
-
-    def _prepend(self, *args, **kwargs):
-        if self._void:
-            raise ChildNodeError()
-        return super()._prepend(*args, **kwargs)
+        for node in nodes:
+            if self._raw_text and type(node) is not str:
+                raise ChildNodeError()
+            yield Text(node)
 
     @property
     def _void(self):
         return self._tag in self._void_tags
+
+    @property
+    def _raw_text(self):
+        return self._tag in self._raw_text_tags
 
     @property
     def _opener(self):
