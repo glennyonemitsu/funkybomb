@@ -183,10 +183,16 @@ class Tag(Renderable):
     def _wash_nodes(self, *nodes):
         if self._void:
             raise ChildNodeError()
-        for node in nodes:
-            if self._raw_text and type(node) is not str:
-                raise ChildNodeError()
-            yield Text(node)
+        elif self._raw_text:
+            for node in nodes:
+                if type(node) is str:
+                    yield Text(node)
+                else:
+                    raise ChildNodeError()
+                yield node
+        else:
+            for node in super()._wash_nodes(*nodes):
+                yield node
 
     @property
     def _void(self):
