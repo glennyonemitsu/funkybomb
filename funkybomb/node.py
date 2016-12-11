@@ -39,9 +39,12 @@ class Node:
         return iter(self._children)
 
     def __setattr__(self, key, value):
-        if key in self._node_attr_keys:
+        if key.startswith('__'):
+            object.__setattr__(self, key, value)
+        elif key in self._node_attr_keys:
             self.__dict__['attrs'][key] = value
-        object.__setattr__(self, key, value)
+        else:
+            self._append(value)
 
     def __getattr__(self, key):
         if key in self._node_attr_keys:
@@ -92,8 +95,7 @@ class Node:
 
 class Renderable(Node):
 
-    _node_attr_keys = {'_opener', '_closer', '_wash_nodes'} | \
-        Node._node_attr_keys
+    _node_attr_keys = {'_opener', '_closer', '_wash_nodes'} | Node._node_attr_keys
 
     def a__init__(self):
         super().__init__()
