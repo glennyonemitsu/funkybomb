@@ -1,3 +1,6 @@
+from funkybomb.exceptions import ChildNodeError
+
+
 class Node:
     """
     The building block of tree based templating.
@@ -88,7 +91,8 @@ class Node:
 
 class Renderable(Node):
 
-    _node_attr_keys = {'_opener', '_closer', '_wash_nodes'} | Node._node_attr_keys
+    _node_attr_keys = {'_opener', '_closer', '_wash_nodes'} | \
+        Node._node_attr_keys
 
     def __repr__(self):
         return '<RenderableNode>'
@@ -159,6 +163,13 @@ class Tag(Renderable):
 
     _node_attr_keys = {'_tag', '_attrs'} | Renderable._node_attr_keys
 
+    # html 5 tag categories according to
+    # https://www.w3.org/TR/html5/syntax.html#void-elements
+    _void_tags = {
+        'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen',
+        'link', 'meta', 'param', 'source', 'track', 'wbr'
+    }
+
     def __init__(self, tag=None):
         super().__init__()
         self._tag = tag
@@ -166,6 +177,20 @@ class Tag(Renderable):
 
     def __repr__(self):
         return '<TagNode[{tag}]>'.format(tag=self._tag)
+
+    def _append(self, *args, **kwargs):
+        if self._void:
+            raise ChildNodeError()
+        return super()._append(*args, **kwargs)
+
+    def _prepend(self, *args, **kwargs):
+        if self._void:
+            raise ChildNodeError()
+        return super()._prepend(*args, **kwargs)
+
+    @property
+    def _void(self):
+        return self._tag in self._void_tags
 
     @property
     def _opener(self):
@@ -182,7 +207,7 @@ class Tag(Renderable):
 
     @property
     def _closer(self):
-        if self._tag is None:
+        if self._tag is None or self._void:
             return ''
         return '</{tag}>'.format(tag=self._tag)
 
