@@ -147,7 +147,7 @@ class Template(Renderable):
 
     def __setitem__(self, name, content):
         t = Template(None)
-        t += content
+        t + content
         self._root._content[name] = t
 
     def __iter__(self):
@@ -156,8 +156,9 @@ class Template(Renderable):
         else:
             contents = self._children
 
-        for node in contents:
-            yield node
+        if contents:
+            for node in contents:
+                yield node
 
 
 class Tag(Renderable):
