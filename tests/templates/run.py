@@ -18,6 +18,21 @@ def test_templates():
     assert output == expected
 
 
+def test_add_magic():
+    r = Template()
+    h = r.html
+    h.p + ('this ', 'is ', 'a ', (Tag('em') + 'test'))
+    h.foo(foo='bar') + 'this is another'
+    output = render(r, False)
+    expected = (
+        '<html>'
+        '<p>this is a <em>test</em></p>'
+        '<foo foo="bar">this is another</foo>'
+        '</html>'
+    )
+    assert output == expected
+
+
 def test_templates_advanced():
     r = Template()
     h = r.html

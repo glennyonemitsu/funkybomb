@@ -28,7 +28,11 @@ class Node:
         Append nodes from the += notation.
         """
 
+        # supports: self + ('foo', 'bar', Tag('em') + 'baz') notation
+        if len(nodes) == 1 and type(nodes[0]) == tuple:
+            nodes = nodes[0]
         self._append(*nodes)
+        return self
 
     def __repr__(self):
         """
