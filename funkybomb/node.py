@@ -23,13 +23,12 @@ class Node:
         self._root_node = self
         self._children = []
 
-    def __iadd__(self, *nodes):
+    def __add__(self, *nodes):
         """
         Append nodes from the += notation.
         """
 
         self._append(*nodes)
-        return self
 
     def __repr__(self):
         """
@@ -61,10 +60,12 @@ class Node:
         return self._node_attr_keys
 
     def _wash_nodes_hook(self, *nodes):
-        return list(self._set_root_for_nodes(*self._wash_nodes(*nodes)))
+        return self._set_root_for_nodes(*self._wash_nodes(*nodes))
 
     def _set_root_for_nodes(self, *nodes):
         for node in nodes:
+            if node is None:
+                continue
             node._root_node = self._root
             yield node
 
@@ -181,15 +182,16 @@ class Tag(Renderable):
         return '<TagNode[{tag}]>'.format(tag=self._tag)
 
     def _wash_nodes(self, *nodes):
-        if self._void:
+        if self._void and nodes:
             raise ChildNodeError()
         elif self._raw_text:
             for node in nodes:
                 if type(node) is str:
                     yield Text(node)
+                elif type(node) is Text:
+                    yield node
                 else:
                     raise ChildNodeError()
-                yield node
         else:
             for node in super()._wash_nodes(*nodes):
                 yield node

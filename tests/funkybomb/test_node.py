@@ -6,17 +6,17 @@ def test_adding_children():
     assert len(root._children) == 0
 
     n = Node()
-    root += n
+    root + n
     assert len(root._children) == 1
 
-    n += Node()
+    n + Node()
     assert len(root._children) == 1
 
     root._append(Node())
     assert len(root._children) == 2
 
     children = [Node() for i in range(5)]
-    root += children
+    root + children
     assert len(root._children) == 7
 
     specials = [Node() for i in range(3)]
@@ -28,7 +28,7 @@ def test_adding_children():
 def test_root():
     root = Node()
     n = Node()
-    root += n
+    root + n
     assert n._root == root
 
     n._append(Node(), Node(), Node())

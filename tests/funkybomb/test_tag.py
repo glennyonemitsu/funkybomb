@@ -45,8 +45,8 @@ def test_raw_text_tag():
     assert t._opener == '<style foo="bar">'
     assert t._closer == '</style>'
 
-    t += 'this is some text'
-    t += 'this is more text'
+    t + 'this is some text'
+    t + 'this is more text'
     assert type(t._children[0]) == Text
     assert type(t._children[1]) == Text
 

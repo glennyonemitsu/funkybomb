@@ -27,9 +27,9 @@ def test_text_wash():
     String appends are converted to Text nodes.
     """
     r = R()
-    r += 'this is a text node'
+    r + 'this is a text node'
     assert type(r._children[0]) == Text
-    r += 'this is another text node'
+    r + 'this is another text node'
     assert type(r._children[1]) == Text
 
 
