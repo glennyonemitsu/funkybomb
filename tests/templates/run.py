@@ -7,8 +7,14 @@ def test_templates():
     r = Template()
     h = r.html
     h.p + 'this is a test'
+    h.foo(foo='bar') + 'this is another'
     output = render(r, False)
-    expected = '<html><p>this is a test</p></html>'
+    expected = (
+        '<html>'
+        '<p>this is a test</p>'
+        '<foo foo="bar">this is another</foo>'
+        '</html>'
+    )
     assert output == expected
 
 
