@@ -10,8 +10,6 @@ class Node:
         '_children', '_tag',
         '_attrs', '_node_attrs',
         '_root', '_root_node'
-        # '_wash_nodes_hook', '_wash_nodes', '_set_root_for_nodes', '_append',
-
     }
 
     def __init__(self):
