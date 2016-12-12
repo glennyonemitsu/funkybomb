@@ -32,7 +32,7 @@ class Node:
 
     def __repr__(self):
         """
-        String representation of the object.
+        String representation of the Node.
         """
 
         return '<BaseNode>'
@@ -42,7 +42,7 @@ class Node:
 
     def __setattr__(self, key, value):
         if key.startswith('__'):
-            object.__setattr__(self, key, value)
+            super().__setattr__(key, value)
         elif key in self._node_attr_keys:
             self.__dict__['attrs'][key] = value
         else:
@@ -51,7 +51,7 @@ class Node:
     def __getattr__(self, key):
         if key in self._node_attr_keys:
             return self.__dict__['attrs'][key]
-        return object.__getattr__(self, key)
+        return super().__getattr__(key)
 
     @property
     def _node_attrs(self):
