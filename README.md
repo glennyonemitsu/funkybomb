@@ -6,8 +6,7 @@ for HTML.
 Start with an empty template, add the first element, and render it:
 
 ```python
->>> from funkybomb.node import Template
->>> from funkybomb.util import render
+>>> from funkybomb import render, Template
 >>> tmpl = Template()
 >>> tmpl.html  # node is added
 >>> render(tmpl)
@@ -18,8 +17,7 @@ Start with an empty template, add the first element, and render it:
 Elements can have attributes:
 
 ```python
->>> from funkybomb.node import Template
->>> from funkybomb.util import render
+>>> from funkybomb import render, Template
 >>> tmpl = Template()
 >>> tmpl.p(foo='bar')
 >>> render(tmpl)
@@ -30,8 +28,7 @@ Elements can have attributes:
 Add text:
 
 ```python
->>> from funkybomb.node import Template
->>> from funkybomb.util import render
+>>> from funkybomb import render, Template
 >>> tmpl = Template()
 >>> tmpl.p + 'hi'
 >>> render(tmpl)
@@ -43,8 +40,7 @@ You cannot reference previously made children nodes (at least not easily), so
 you can use references:
 
 ```python
->>> from funkybomb.node import Template
->>> from funkybomb.util import render
+>>> from funkybomb import render, Template
 >>> tmpl = Template()
 >>> html = tmpl.html
 >>> html.p + 'First paragraph'
@@ -64,8 +60,7 @@ you can use references:
 You can also have content placeholders:
 
 ```python
->>> from funkybomb.node import Template
->>> from funkybomb.util import render
+>>> from funkybomb import render, Template
 >>> tmpl = Template()
 >>> sub_tmpl = Template('my-placeholder')
 >>> sub_tmpl + 'default text'
@@ -83,8 +78,7 @@ You can also have content placeholders:
 Some a more advanced example:
 
 ```python
->>> from funkybomb.node import Tag, Template
->>> from funkybomb.util import render
+>>> from funkybomb import render, Tag, Template
 >>> tmpl = Template()
 >>> p = tmpl.p
 >>> p + ('this ', 'is ', 'a ', (Tag('em') + 'test'))
@@ -103,8 +97,7 @@ Since templates are meant to be reused and mutability can make these change,
 you can also lock the node tree in place.
 
 ```python
->>> from funkybomb.node import Template
->>> from funkybomb.util import freeze, render
+>>> from funkybomb import freeze, render, Template
 >>> tmpl = Template()
 >>> sub_tmpl = Template('my-placeholder')
 >>> sub_tmpl + 'default text'
