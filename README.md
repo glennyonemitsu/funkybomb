@@ -60,7 +60,7 @@ you can use references:
 You can also have content placeholders:
 
 ```python
->>> from funkybomb import render, Template
+>>> from funkybomb import render, Tag, Template
 >>> tmpl = Template()
 >>> sub_tmpl = Template('my-placeholder')
 >>> sub_tmpl + 'default text'
@@ -69,10 +69,10 @@ You can also have content placeholders:
 
 <div>default text</div>
 
->>> tmpl['my-placeholder'] = 'updated text'
->>> render(tmpl)
+>>> ctx = {'my-placeholder': Tag('p') + 'updated text'}
+>>> render(tmpl, context=ctx)
 
-<div>updated text</div>
+<div><p>updated text</p></div>
 ```
 
 Some a more advanced example:
@@ -97,7 +97,7 @@ Since templates are meant to be reused and mutability can make these change,
 you can also lock the node tree in place.
 
 ```python
->>> from funkybomb import freeze, render, Template
+>>> from funkybomb import freeze, render, Template, Text
 >>> tmpl = Template()
 >>> sub_tmpl = Template('my-placeholder')
 >>> sub_tmpl + 'default text'
@@ -112,8 +112,8 @@ exception thrown here
 <div>default text</div>
 
 >>> # template placeholders are still mutable
->>> tmpl['my-placeholder'] = 'updated text'
->>> render(tmpl)
+>>> ctx = {'my-placeholder': Text('updated text')}
+>>> render(tmpl, context=ctx)
 
 <div>updated text</div>
 ```

@@ -1,5 +1,6 @@
 from funkybomb.node import Tag
 from funkybomb.node import Template
+from funkybomb.node import Text
 from funkybomb.util import render
 
 
@@ -8,7 +9,7 @@ def test_templates():
     h = r.html
     h.p + 'this is a test'
     h.foo(foo='bar') + 'this is another'
-    output = render(r, False)
+    output = render(r, pretty=False)
     expected = (
         '<html>'
         '<p>this is a test</p>'
@@ -27,7 +28,7 @@ def test_add_magic():
     bar + 'foo'
     bar + 'bar'
     bar + 'baz'
-    output = render(r, False)
+    output = render(r, pretty=False)
     expected = (
         '<html>'
         '<p>this is a <em>test</em></p>'
@@ -47,7 +48,7 @@ def test_templates_advanced():
         tr = table.tr
         for j in range(3):
             tr.td + 'row {row} col {col}'.format(row=i, col=j)
-    output = render(r, False)
+    output = render(r, pretty=False)
     expected = (
         '<html>'
         '<p>this is a test</p>'
@@ -66,7 +67,7 @@ def test_blocks_default():
     foo = Template('foo')
     foo.p + 'default'
     h + foo
-    output = render(r, False)
+    output = render(r, pretty=False)
     expected = '<html><p>default</p></html>'
     assert output == expected
 
@@ -80,7 +81,32 @@ def test_blocks_content():
 
     data = Tag('div')
     data + 'this is overwritten'
-    r['foo'] = data
-    output = render(r, False)
+
+    context = {'foo': data}
+    output = render(r, context=context, pretty=False)
     expected = '<html><div>this is overwritten</div></html>'
+    assert output == expected
+
+
+def test_blocks_tag_content():
+    r = Template()
+    h = r.html
+    h.foo = Template('foo') + 'default'
+
+    context = {'foo': Tag('p') + 'this is overwritten'}
+    output = render(r, context=context, pretty=False)
+    expected = '<html><p>this is overwritten</p></html>'
+    assert output == expected
+
+
+def test_blocks_text_content():
+    r = Template()
+    h = r.html
+    foo = Template('foo')
+    foo.p + 'default'
+    h + foo
+
+    context = {'foo': Text('this is overwritten')}
+    output = render(r, context=context, pretty=False)
+    expected = '<html>this is overwritten</html>'
     assert output == expected
