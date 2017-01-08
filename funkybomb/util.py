@@ -2,17 +2,10 @@ from funkybomb.node import Template
 
 
 def generate(node, prefix, indent, context):
-    node_is_template = getattr(node, '_is_template', False)
-    node_name = getattr(node, '_name', None)
 
-    print(context)
-    print(node_name)
-    print(node, node._children)
-    if isinstance(node, Template):
-        node_is_template = True
-
-    if node_is_template and node_name and context and node_name in context:
-        node = context[node_name]
+    if isinstance(node, Template) and node._name and context and \
+            node._name in context:
+        node = context[node._name]
 
     if node._opener:
         yield prefix + node._opener
