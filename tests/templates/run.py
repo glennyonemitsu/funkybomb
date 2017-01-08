@@ -96,6 +96,8 @@ def test_blocks_tag_content():
     context = {'foo': Tag('p') + 'this is overwritten'}
     output = render(r, context=context, pretty=False)
     expected = '<html><p>this is overwritten</p></html>'
+    print(output)
+    print(expected)
     assert output == expected
 
 

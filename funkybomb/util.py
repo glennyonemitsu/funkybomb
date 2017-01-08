@@ -1,6 +1,16 @@
+from funkybomb.node import Template
+
+
 def generate(node, prefix, indent, context):
     node_is_template = getattr(node, '_is_template', False)
     node_name = getattr(node, '_name', None)
+
+    print(context)
+    print(node_name)
+    print(node, node._children)
+    if isinstance(node, Template):
+        node_is_template = True
+
     if node_is_template and node_name and context and node_name in context:
         node = context[node_name]
 
@@ -30,15 +40,3 @@ def freeze(node):
     node._children = tuple(node._children)
     for child in node:
         freeze(child)
-
-
-def build_attrs(attrs):
-    pairs = []
-    for key, value in attrs.items():
-        if key == '_class':
-            key = 'class'
-        pairs.append((key, value))
-    attrs = ' '.join(
-        '{key}="{value}"'.format(key=key, value=value)
-        for key, value in pairs)
-    return attrs

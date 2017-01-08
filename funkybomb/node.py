@@ -1,5 +1,5 @@
 from funkybomb.exceptions import ChildNodeError
-from funkybomb.util import build_attrs
+from funkybomb.node_util import build_attrs, hide_attribute
 
 
 class Node:
@@ -7,22 +7,23 @@ class Node:
     The building block of tree based templating.
     """
 
-    _node_attr_keys = {
-        '_children', '_tag',
-        '_attrs', '_node_attrs',
-        '_name', '_root', '_root_node'
-    }
-    _is_template = False
-
     def __init__(self):
         """
         Initialize the Node.
         """
 
-        self.__dict__['attrs'] = {}
-        self._name = None
         self._root_node = self
         self._children = []
+
+    def __repr__(self):
+        """
+        String representation of the Node.
+        """
+
+        return '<BaseNode>'
+
+    def __iter__(self):
+        return iter(self._children)
 
     def __add__(self, *nodes):
         """
@@ -35,42 +36,11 @@ class Node:
         self._append(*nodes)
         return self
 
-    def __repr__(self):
-        """
-        String representation of the Node.
-        """
-
-        return '<BaseNode>'
-
-    def __iter__(self):
-        return iter(self._children)
-
-    def __setattr__(self, key, value):
-        if key.startswith('__'):
-            super().__setattr__(key, value)
-        elif key in self._node_attr_keys:
-            self.__dict__['attrs'][key] = value
-        else:
-            self._append(value)
-
-    def __getattr__(self, key):
-        if key in self._node_attr_keys:
-            return self.__dict__['attrs'][key]
-        return super().__getattr__(key)
-
-    @property
-    def _node_attrs(self):
-        if type(self) is Node:
-            return self._node_attr_keys
-        return self._node_attr_keys
-
     def _wash_nodes_hook(self, *nodes):
         return self._set_root_for_nodes(*self._wash_nodes(*nodes))
 
     def _set_root_for_nodes(self, *nodes):
         for node in nodes:
-            if node is None:
-                continue
             node._root_node = self._root
             yield node
 
@@ -97,26 +67,34 @@ class Node:
 
 class Renderable(Node):
 
-    _node_attr_keys = {'_opener', '_closer', '_wash_nodes'} | \
-        Node._node_attr_keys
-
     def __repr__(self):
         return '<RenderableNode>'
 
     def __init__(self, *args, **attrs):
-        super().__init__(*args)
+        super().__init__()
         self._attrs = attrs
 
+    def __setattr__(self, key, value):
+        if key.startswith('_'):
+            super().__setattr__(key, value)
+        else:
+            self._append(value)
+
     def __getattr__(self, key):
-        if key in self._node_attr_keys:
-            return self.__dict__['attrs'].get(key, None)
+        if hide_attribute(key):
+            return None
+
+        if key.startswith('_'):
+            setattr(self, key, None)
+            return super().__getattr__(key)
+
         n = Tag(key)
         self._append(n)
         return n
 
     def __call__(self, *args, **kwargs):
         self._append(*args)
-        self._attrs = kwargs
+        self._attrs.update(kwargs)
         return self
 
     @property
@@ -137,13 +115,9 @@ class Renderable(Node):
 
 class Template(Renderable):
 
-    _node_attr_keys = {'_content', '_name'} | Renderable._node_attr_keys
-    _is_template = True
-
     def __init__(self, name=None):
         super().__init__()
         self._name = name
-        self._content = {}
 
     def __repr__(self):
         if self._name:
@@ -151,25 +125,8 @@ class Template(Renderable):
         else:
             return '<AnonymousTemplateNode>'
 
-    def __setitem__(self, name, content):
-        t = Template(None)
-        t + content
-        self._root._content[name] = t
-
-    def __iter__(self):
-        if self._name in self._root._content:
-            contents = self._root._content[self._name]
-        else:
-            contents = self._children
-
-        if contents:
-            for node in contents:
-                yield node
-
 
 class Tag(Renderable):
-
-    _node_attr_keys = {'_tag', '_attrs'} | Renderable._node_attr_keys
 
     # html 5 tag categories according to
     # https://www.w3.org/TR/html5/syntax.html#void-elements
@@ -181,9 +138,8 @@ class Tag(Renderable):
     _raw_text_tags = {'script', 'style'}
 
     def __init__(self, tag=None, **attrs):
-        super().__init__()
+        super().__init__(**attrs)
         self._tag = tag
-        self._attrs = attrs
 
     def __repr__(self):
         return '<TagNode[{tag}]>'.format(tag=self._tag)
@@ -230,8 +186,6 @@ class Tag(Renderable):
 
 
 class Text(Renderable):
-
-    _node_attr_keys = {'_content'} | Renderable._node_attr_keys
 
     def __init__(self, content=''):
         super().__init__()
