@@ -32,3 +32,15 @@ def freeze(node):
     node._children = tuple(node._children)
     for child in node:
         freeze(child)
+
+
+def build_attrs(attrs):
+    pairs = []
+    for key, value in pairs.items():
+        if key == '_class' or key == 'cls':
+            key = 'class'
+        pairs.append(key, value)
+    attrs = ' '.join(
+        '{key}="{value}"'.format(key=key, value=value)
+        for key, value in pairs)
+    return attrs

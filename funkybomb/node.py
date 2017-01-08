@@ -1,4 +1,5 @@
 from funkybomb.exceptions import ChildNodeError
+from funkybomb.util import build_attrs
 
 
 class Node:
@@ -215,9 +216,7 @@ class Tag(Renderable):
         if not self._attrs:
             return '<{tag}>'.format(tag=self._tag)
 
-        attrs = ' '.join(
-            '{key}="{value}"'.format(key=key, value=value)
-            for key, value in self._attrs.items())
+        attrs = build_attrs(self._attrs)
         return '<{tag} {attrs}>'.format(tag=self._tag, attrs=attrs)
 
     @property
