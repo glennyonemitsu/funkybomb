@@ -80,6 +80,11 @@ class Renderable(Node):
             self._append(value)
 
     def __getattr__(self, key):
+
+        # required for a bunch of magic methods quirks like with deepcopy()
+        if key.startswith('__'):
+            return super().__getattr__(key)
+
         if hide_attribute(key):
             return None
 
