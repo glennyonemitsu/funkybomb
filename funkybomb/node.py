@@ -124,6 +124,9 @@ class Template(Renderable):
         else:
             return '<AnonymousTemplateNode>'
 
+    def __setitem__(self, key, value):
+        bind_template(self, key, value)
+
 
 class Tag(Renderable):
 
@@ -226,3 +229,12 @@ def is_ipython():
         return False
     else:
         return True
+
+
+def bind_template(root, name, node):
+    for i, child in enumerate(root):
+        if isinstance(child, Template) and child._name == name:
+            root._children[i] = node
+            return
+        else:
+            bind_template(child, name, node)
