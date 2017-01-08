@@ -10,8 +10,9 @@ class Node:
     _node_attr_keys = {
         '_children', '_tag',
         '_attrs', '_node_attrs',
-        '_root', '_root_node'
+        '_name', '_root', '_root_node'
     }
+    _is_template = False
 
     def __init__(self):
         """
@@ -19,6 +20,7 @@ class Node:
         """
 
         self.__dict__['attrs'] = {}
+        self._name = None
         self._root_node = self
         self._children = []
 
@@ -136,6 +138,7 @@ class Renderable(Node):
 class Template(Renderable):
 
     _node_attr_keys = {'_content', '_name'} | Renderable._node_attr_keys
+    _is_template = True
 
     def __init__(self, name=None):
         super().__init__()

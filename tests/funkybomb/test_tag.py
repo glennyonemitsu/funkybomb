@@ -18,6 +18,10 @@ def test_tag():
     assert t._opener == '<t foo="bar">'
     assert t._closer == '</t>'
 
+    t = Tag('t', _class='bar')
+    assert t._opener == '<t class="bar">'
+    assert t._closer == '</t>'
+
     t = Tag()
     assert t._opener == ''
     assert t._closer == ''
