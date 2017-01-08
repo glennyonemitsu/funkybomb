@@ -1,6 +1,3 @@
-# from funkybomb import Template
-
-
 def generate(node, prefix, indent, context):
     node_is_template = getattr(node, '_is_template', False)
     node_name = getattr(node, '_name', None)
