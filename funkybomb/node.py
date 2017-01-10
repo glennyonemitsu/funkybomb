@@ -110,8 +110,9 @@ class Renderable(Node):
         return ''
 
     def _wash_nodes(self, *nodes):
+        text_types = {str, int, float}
         for node in nodes:
-            if type(node) is str:
+            if type(node) in text_types:
                 yield Text(node)
             else:
                 yield node
@@ -155,8 +156,9 @@ class Tag(Renderable):
         if self._void and nodes:
             raise ChildNodeError()
         elif self._raw_text:
+            text_types = {str, int, float}
             for node in nodes:
-                if type(node) is str:
+                if type(node) in text_types:
                     yield Text(node)
                 elif type(node) is Text:
                     yield node
@@ -196,7 +198,7 @@ class Text(Renderable):
 
     def __init__(self, content=''):
         super().__init__()
-        self._content = content
+        self._content = str(content)
 
     def __repr__(self):
         return '<TextNode["{text}"]>'.format(text=self._content)
