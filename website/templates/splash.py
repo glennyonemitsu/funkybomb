@@ -3,39 +3,25 @@ from copy import deepcopy
 from funkybomb import freeze, Tag, Template
 
 from templates import base
-from templates.util import funky_pair, row_cols
-from templates.util import show_python, show_html
+from templates.util import row_cols, show_python, show_html
 
-
-content = Template()
-
-headline = row_cols(content)
-headline.h1(_class='display-4 mt-5') + (
-    'Funky Bomb is an HTML template framework powered by native Python syntax'
-)
 
 example_funky = '''
 from funkybomb import render, Template
-from models import users
+from models import user_model
 
 tmpl = Template()
-headline = Template('headline')
-headline + 'This is a default headline'
-
-tmpl.h1 + headline
 table = tmpl.table
 
-for user in users.get_all():
+for user in user_model.get_all():
     row = table.tr
     row.td + user.first_name
     row.td + user.last_name
 
-ctx = {'headline': 'Here are some names'}
-print(render(tmpl, context=ctx))
+print(render(tmpl))
 '''
 
 example_html = '''
-<h1>Here are some names</h1>
 <table>
     <tr>
         <td>John</td>
@@ -45,62 +31,66 @@ example_html = '''
         <td>Jane</td>
         <td>Doe</td>
     </tr>
-    <tr>
-        <td>George</td>
-        <td>Washington</td>
-    </tr>
 </table>
 '''
 
+content = Template()
+
+headline = row_cols(content)
+headline.h1(_class='mt-5 mb-5') + 'Funky Bomb'
+
 pitch_python, gutter, pitch_html = row_cols(content, 4, 1, 4)
 
-pitch_python.p(_class='h4 mt-5 mb-4') + 'Use Native Python'
+pitch_python.p(_class='h5') + 'Use Native Python'
 pitch_python.pre.code + show_python(example_funky)
 
-gutter.p(_class='h4 mt-5 mb-4') + '\u2192'
+gutter.p(_class='h5') + '\u2192'
 
-pitch_html.p(_class='h4 mt-5 mb-4') + 'Create HTML Pages'
+pitch_html.p(_class='h5') + 'Create HTML Pages'
 pitch_html.pre.code + show_html(example_html)
 
-pitch_close = row_cols(content)
-pitch_close.p(_class='lead') + \
+
+# follow ups
+fu = row_cols(content)
+
+fu.p(_class='lead mb-5') + \
     'That is it! No other HTML template or code involved. See how you can ' + \
     (Tag('a', href='/docs/get-started') + 'get started') + '.'
 
-# second row - native python benefits
-followups = content.div(_class='mt-5')
-basics, patterns, integrations = row_cols(followups, 4, 4, 4)
-
-basics.h4 + 'The Basics'
-basics.p + (
-    'Funky Bomb has a small set of rules to build out DOM-like structures '
-    'with native Python.'
+fu.p(_class='h4') + 'It is easy to use'
+fu.p + (
+    'Funky Bomb has a small set of rules to build out DOM-like '
+    'structures and reusable templates with native Python.'
 )
-basics_links = basics.p
-basics_links.a(href='/docs/basics') + 'Syntax'
-basics_links + ', '
-basics_links.a(href='/docs/basics') + 'Templating'
-basics_links + ', '
-basics_links.a(href='/docs/basics') + 'Utilities'
+fu_links = fu.p
+fu_links + 'Learn more: '
+fu_links.a(href='/docs/basics') + 'Syntax'
+fu_links + ', '
+fu_links.a(href='/docs/basics') + 'Templating'
+fu_links + ', '
+fu_links.a(href='/docs/basics') + 'Utilities'
 
-patterns.h4 + 'Common Patterns'
-patterns.p + (
+fu.p(_class='h4 mt-4') + 'Use Python syntax and patterns'
+fu.p + (
     'Use normal programming patterns to build abstractions and construct more '
-    'advanced HTML easily.'
+    'advanced HTML with the power of Python.'
 )
-patterns_links = patterns.p
-patterns_links.a(href='/docs/patterns') + 'Reusability'
-patterns_links + ', '
-patterns_links.a(href='/docs/patterns') + 'Composition'
-patterns_links + ', '
-patterns_links.a(href='/docs/patterns') + 'Abstractions'
+fu_links = fu.p
+fu_links + 'Common patterns: '
+fu_links.a(href='/docs/patterns') + 'Reusability'
+fu_links + ', '
+fu_links.a(href='/docs/patterns') + 'Composition'
+fu_links + ', '
+fu_links.a(href='/docs/patterns') + 'Abstractions'
 
-integrations.h4 + 'Integrate with frameworks'
-integrations.p + (
-    'Easily slip in Funky Bomb into your application.'
+fu.p(_class='h4 mt-4') + 'Easy integration'
+fu.p + (
+    'Any web framework that uses strings for serving HTML can have Funky Bomb '
+    'integrated, since Funky Bomb outputs HTML strings itself.'
 )
-integrations_links = integrations.p
-integrations_links.a(href='/docs/integrations/flask') + 'Flask'
+fu_links = fu.p
+fu_links + 'Example integrations: '
+fu_links.a(href='/docs/integrations/flask') + 'Flask'
 
 
 tmpl = deepcopy(base.tmpl)
