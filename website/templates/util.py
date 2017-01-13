@@ -1,6 +1,4 @@
-import importlib
-
-from funkybomb import render, Template
+from funkybomb import Template
 from pygments import highlight
 from pygments.lexers import HtmlLexer
 from pygments.lexers import PythonLexer
@@ -18,19 +16,39 @@ def row_cols(node, *cols):
     return divs
 
 
-def nav_links(current_url):
-    links = (
-        ('/', 'home'),
-        ('/about', 'about'),
-        ('/contact', 'contact'),
+def nav_links(current_url, links=None):
+    _links = (
+        ('/', 'Funky Bomb', ()),
+        ('/docs', 'Docs', (
+            ('/docs/basics', 'Basics', (
+                ('/docs/basics/syntax', 'Syntax', ()),
+                ('/docs/basics/templating', 'Templating', ()),
+                ('/docs/basics/utilities', 'Utilities', ()),
+            )),
+            ('/docs/patterns', 'Common Patterns', (
+                ('/docs/patterns/reuseability', 'Reusability', ()),
+                ('/docs/patterns/composition', 'Composition', ()),
+                ('/docs/patterns/abstractions', 'Abstractions', ()),
+            )),
+            ('/docs/integrations', 'Integrations', (
+                ('/docs/integrations/flask', 'Flask', ()),
+            )),
+        ))
     )
-    nav = Template()
-    for url, text in links:
-        nav_item = nav.li(_class='nav-item')
-        _class = 'nav-link'
+    if links is None:
+        links = _links
+
+    tmpl = Template()
+    nav = tmpl.ul(_class='list-unstyled')
+    for url, text, children in links:
+        nav_item = nav.li()
+        _class = ''
         if url == current_url:
-            _class += ' active'
+            _class += 'active'
         nav_item.a(_class=_class, href=url) + text
+        if children:
+            nav_item = nav.li()
+            nav_item + nav_links(current_url, children)
     return nav
 
 
@@ -45,28 +63,19 @@ def template(tmpl):
     return decorator
 
 
-def funky_pair(module, namespace='tmpl'):
-    source = module.replace('.', '/')
-    source += '.py'
-    with open(source, 'rt') as fh:
-        funky_code = fh.read()
-        funky_code = highlight(
-            funky_code, PythonLexer(), HtmlFormatter(style='colorful')
-        )
-
-    funky_module = importlib.import_module(module)
-    target = getattr(funky_module, namespace)
-    funky_output = render(target, pretty=True)
-    funky_output = highlight(
-        funky_output, HtmlLexer(), HtmlFormatter(style='colorful')
-    )
-
-    return funky_code, funky_output
-
-
 def show_python(text):
     return highlight(text, PythonLexer(), HtmlFormatter(style='colorful'))
 
 
 def show_html(text):
     return highlight(text, HtmlLexer(), HtmlFormatter(style='colorful'))
+
+
+def source(text):
+    lines = []
+    indent = None
+    for line in text.splitlines():
+        if indent is None and line != '':
+            indent = len(line) - len(line.lstrip())
+        lines.append(line[indent:])
+    return '\n'.join(lines).strip()

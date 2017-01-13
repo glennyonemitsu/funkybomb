@@ -21,6 +21,10 @@ styles = (
 for style in styles:
     head.link(rel="stylesheet", href=style, crossorigin="anonymous")
 head.style + HtmlFormatter(style='colorful').get_style_defs('.highlight')
+head.style + '''
+.nav-links ul { margin-left: 0;}
+.nav-links ul ul { margin-left: 1.4rem;}
+'''
 
 
 scripts = (
