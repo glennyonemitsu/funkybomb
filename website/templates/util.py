@@ -1,4 +1,8 @@
-from funkybomb import Template
+from functools import update_wrapper
+
+from aiohttp import web
+
+from funkybomb import render, Template
 from pygments import highlight
 from pygments.lexers import HtmlLexer
 from pygments.lexers import PythonLexer
@@ -58,8 +62,13 @@ def template(tmpl):
     """
 
     def decorator(fn):
-        fn.funkybomb = {'template': tmpl}
-        return fn
+        async def wrapped(req, *args, **kwargs):
+            context = await fn(req, *args, **kwargs)
+            context['nav links'] = nav_links(req.url.path)
+            output = render(tmpl, context=context, pretty=False)
+            return web.Response(text=output, content_type='text/html')
+        update_wrapper(wrapped, fn)
+        return wrapped
     return decorator
 
 
