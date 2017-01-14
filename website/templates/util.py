@@ -30,7 +30,7 @@ def nav_links(current_url, links=None):
                 ('/docs/basics/utilities', 'Utilities', ()),
             )),
             ('/docs/patterns', 'Common Patterns', (
-                ('/docs/patterns/reuseability', 'Reusability', ()),
+                ('/docs/patterns/reusability', 'Reusability', ()),
                 ('/docs/patterns/composition', 'Composition', ()),
                 ('/docs/patterns/abstractions', 'Abstractions', ()),
             )),

@@ -2,7 +2,6 @@ from funkybomb import Tag, Template, Text
 
 from application.util import route
 from templates import documentation
-# from templates.home import tmpl as home_tmpl
 from templates.util import row_cols, show_python, show_html, source, template
 
 
@@ -116,13 +115,13 @@ async def home(req):
     }
 
 
-@route('/about')
+@route('/docs')
 @template(documentation.tmpl)
-async def about(req):
-    return {'content': Tag('p') + 'about'}
+async def docs_home(req):
+    tmpl = Template()
+    tmpl.p + 'hi'
 
-
-@route('/contact')
-@template(documentation.tmpl)
-async def contact(req):
-    return {'content': Tag('p') + 'contact'}
+    return {
+        'content': tmpl,
+        'headline': Text('Docs')
+    }
