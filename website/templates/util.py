@@ -1,10 +1,10 @@
 from functools import update_wrapper
+import html
 
 from aiohttp import web
-from funkybomb import render, Template
+from funkybomb import render, Tag, Template
 from pygments import highlight
-from pygments.lexers import HtmlLexer
-from pygments.lexers import PythonLexer
+from pygments.lexers import HtmlLexer, PythonLexer, TextLexer
 from pygments.formatters import HtmlFormatter
 
 from application import constants
@@ -54,11 +54,16 @@ def template(tmpl):
 
 
 def show_python(text):
-    return highlight(text, PythonLexer(), HtmlFormatter(style='colorful'))
+    return highlight(
+        source(text), PythonLexer(), HtmlFormatter(style='colorful'))
 
 
 def show_html(text):
-    return highlight(text, HtmlLexer(), HtmlFormatter(style='colorful'))
+    return highlight(source(text), HtmlLexer(), HtmlFormatter(style='colorful'))
+
+
+def show_text(text):
+    return highlight(source(text), TextLexer(), HtmlFormatter(style='colorful'))
 
 
 def source(text):
@@ -69,3 +74,16 @@ def source(text):
             indent = len(line) - len(line.lstrip())
         lines.append(line[indent:])
     return '\n'.join(lines).strip()
+
+
+def header(text, level=2):
+    attr = text.lower().replace(' ', '-')
+    t = 'h' + str(level)
+    return Tag(t, id=attr, _class='mt-5') + text
+
+
+def p(*texts):
+    tmpl = Template()
+    for p in texts:
+        tmpl.p + html.escape(p)
+    return tmpl

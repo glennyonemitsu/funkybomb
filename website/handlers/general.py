@@ -2,7 +2,7 @@ from funkybomb import Tag, Template, Text
 
 from application.util import route
 from templates import documentation
-from templates.util import row_cols, show_python, show_html, source, template
+from templates.util import row_cols, show_python, show_html, template
 
 
 @route('/')
@@ -50,7 +50,7 @@ async def home(req):
         )
     })
 
-    example_funky = source('''
+    example_funky = show_python('''
     from funkybomb import render, Template
     from models import user_model
 
@@ -65,7 +65,7 @@ async def home(req):
     print(render(tmpl))
     ''')
 
-    example_html = source('''
+    example_html = show_html('''
     <table>
         <tr>
             <td>John</td>
@@ -83,12 +83,12 @@ async def home(req):
     pitch_python, gutter, pitch_html = row_cols(content, 5, 1, 5)
 
     pitch_python.p(_class='h5') + 'Use Native Python'
-    pitch_python.pre.code + show_python(example_funky)
+    pitch_python + example_funky
 
     gutter.p(_class='h5') + '\u2192'
 
     pitch_html.p(_class='h5') + 'Create HTML Pages'
-    pitch_html.pre.code + show_html(example_html)
+    pitch_html + example_html
 
     fu = row_cols(content)
 
