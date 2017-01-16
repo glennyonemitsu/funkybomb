@@ -23,9 +23,10 @@ for style in styles:
 head.style + HtmlFormatter(style='colorful').get_style_defs('.highlight')
 head.style + '''
 .nav-links ul { margin-left: 0;}
-.nav-links ul ul { margin-left: 1.4rem;}
+.nav-links ul ul { margin-left: 1.2rem;}
+.highlight { padding: 1.4rem; background-color: #f2f2f2; }
+.highlight pre { margin: 0 }
 '''
-
 
 scripts = (
     "https://code.jquery.com/jquery-3.1.1.slim.min.js",

@@ -80,19 +80,17 @@ async def home(req):
 
     content = Template()
 
-    pitch_python, gutter, pitch_html = row_cols(content, 5, 1, 5)
+    pitch_python, pitch_html = row_cols(content, 6, 6)
 
     pitch_python.p(_class='h5') + 'Use Native Python'
     pitch_python + example_funky
-
-    gutter.p(_class='h5') + '\u2192'
 
     pitch_html.p(_class='h5') + 'Create HTML Pages'
     pitch_html + example_html
 
     fu = row_cols(content)
 
-    fu.p(_class='lead mb-5') + \
+    fu.p(_class='lead mt-5 mb-5') + \
         'That is it! No other HTML template or code involved. See how you ' + \
         'can ' + (Tag('a', href='/docs/basics/quick-start') + 'get started') + \
         '.'
