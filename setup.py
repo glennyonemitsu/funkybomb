@@ -9,6 +9,13 @@ setup(
     license='Apache License 2.0',
     packages=['funkybomb'],
     zip_safe=False,
+    classifiers=[
+        'Development Status :: 3 - Alpha',
+        'Environment :: Web Environment',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: Apache Software License',
+        'Programming Language :: Python :: 3.6',
+    ],
 
     setup_requires=['pytest-runner'],
     tests_require=['pytest', 'pytest-cov', 'pytest-flake8'],
