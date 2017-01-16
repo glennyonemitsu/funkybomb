@@ -1,12 +1,13 @@
 from functools import update_wrapper
 
 from aiohttp import web
-
 from funkybomb import render, Template
 from pygments import highlight
 from pygments.lexers import HtmlLexer
 from pygments.lexers import PythonLexer
 from pygments.formatters import HtmlFormatter
+
+from application import constants
 
 
 def row_cols(node, *cols):
@@ -20,28 +21,7 @@ def row_cols(node, *cols):
     return divs
 
 
-def nav_links(current_url, links=None):
-    _links = (
-        ('/', 'Funky Bomb', ()),
-        ('/docs', 'Docs', (
-            ('/docs/basics', 'Basics', (
-                ('/docs/basics/syntax', 'Syntax', ()),
-                ('/docs/basics/templating', 'Templating', ()),
-                ('/docs/basics/utilities', 'Utilities', ()),
-            )),
-            ('/docs/patterns', 'Common Patterns', (
-                ('/docs/patterns/reusability', 'Reusability', ()),
-                ('/docs/patterns/composition', 'Composition', ()),
-                ('/docs/patterns/abstractions', 'Abstractions', ()),
-            )),
-            ('/docs/integrations', 'Integrations', (
-                ('/docs/integrations/flask', 'Flask', ()),
-            )),
-        ))
-    )
-    if links is None:
-        links = _links
-
+def nav_links(current_url, links):
     tmpl = Template()
     nav = tmpl.ul(_class='list-unstyled')
     for url, text, children in links:
@@ -64,7 +44,8 @@ def template(tmpl):
     def decorator(fn):
         async def wrapped(req, *args, **kwargs):
             context = await fn(req, *args, **kwargs)
-            context['nav links'] = nav_links(req.url.path)
+            context['nav links'] = nav_links(
+                req.url.path, links=constants.nav_links)
             output = render(tmpl, context=context, pretty=False)
             return web.Response(text=output, content_type='text/html')
         update_wrapper(wrapped, fn)

@@ -94,7 +94,8 @@ async def home(req):
 
     fu.p(_class='lead mb-5') + \
         'That is it! No other HTML template or code involved. See how you ' + \
-        'can ' + (Tag('a', href='/docs/get-started') + 'get started') + '.'
+        'can ' + (Tag('a', href='/docs/basics/quick-start') + 'get started') + \
+        '.'
 
     for item in followups:
         fu.p(_class='h4 mt-5') + item['header']
