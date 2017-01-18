@@ -23,7 +23,6 @@ async def docs_basics_home(req):
 @template(documentation.tmpl)
 async def docs_basics_installation(req):
     t = Template()
-    t + header('Installation', 1)
     t + p('Funky Bomb is available via PyPi and install is simple')
     t + show_text('pip install funky-bomb')
 

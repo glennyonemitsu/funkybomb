@@ -31,7 +31,7 @@ async def home(req):
         ),
         'links': (
             ('Common patterns:',),
-            ('Abstractions', '/docs/patterns/abstractions'),
+            ('Abstraction', '/docs/patterns/abstraction'),
             ('Composition', '/docs/patterns/composition'),
             ('Reusability', '/docs/patterns/reusability'),
         )

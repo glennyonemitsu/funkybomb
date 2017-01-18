@@ -19,4 +19,4 @@ nav_links = (
 )
 
 
-url_prefix = ''
+url_prefix = '/funkybomb'

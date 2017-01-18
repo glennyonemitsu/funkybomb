@@ -37,6 +37,45 @@ def nav_links(current_url, links):
     return nav
 
 
+def nav_links_new():
+    nav_groups = (
+        (
+            'Basics',
+            (
+                ('/docs/basics/installation', 'Installation'),
+                ('/docs/basics/syntax', 'Syntax'),
+                ('/docs/basics/templating', 'Templating'),
+                ('/docs/basics/utilities', 'Utilities'),
+            )
+        ),
+        (
+            'Common Patterns',
+            (
+                ('/docs/patterns/abstraction', 'Abstractions'),
+                ('/docs/patterns/composition', 'Composition'),
+                ('/docs/patterns/reusability', 'Reusability'),
+            )
+        ),
+        (
+            'Integrations',
+            (
+                ('/docs/integrations/flask', 'Flask'),
+            )
+        ),
+    )
+
+    tmpl = Template()
+    nav = tmpl.ul(_class='list-unstyled')
+    nav.li.a(href=url('/')) + 'Funky Bomb'
+
+    for name, links in nav_groups:
+        nav.li.p(_class='mt-3 mb-1') + name
+        for u, text in links:
+            nav.li.a(href=url(u)) + text
+
+    return tmpl
+
+
 def template(tmpl):
     """
     aiohttp view decorator.
@@ -45,8 +84,7 @@ def template(tmpl):
     def decorator(fn):
         async def wrapped(req, *args, **kwargs):
             context = await fn(req, *args, **kwargs)
-            context['nav links'] = nav_links(
-                req.url.path, links=constants.nav_links)
+            context['nav links'] = nav_links_new()
             output = render(tmpl, context=context, pretty=False)
             return web.Response(text=output, content_type='text/html')
         update_wrapper(wrapped, fn)
