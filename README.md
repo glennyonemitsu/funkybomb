@@ -1,5 +1,8 @@
 # Funkybomb - quick DOM like tree building
 
+
+Temporary [documentation](https://pythonhosted.org/funkybomb/) available online.
+
 Funkybomb uses Python's magic methods to help you quickly build a DOM like tree
 for HTML.
 
