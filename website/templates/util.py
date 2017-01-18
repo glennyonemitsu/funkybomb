@@ -8,6 +8,7 @@ from pygments.lexers import HtmlLexer, PythonLexer, TextLexer
 from pygments.formatters import HtmlFormatter
 
 from application import constants
+from application.util import url
 
 
 def row_cols(node, *cols):
@@ -24,12 +25,12 @@ def row_cols(node, *cols):
 def nav_links(current_url, links):
     tmpl = Template()
     nav = tmpl.ul(_class='list-unstyled')
-    for url, text, children in links:
+    for href, text, children in links:
         nav_item = nav.li()
         _class = ''
         if url == current_url:
             _class += 'active'
-        nav_item.a(_class=_class, href=url) + text
+        nav_item.a(_class=_class, href=url(href)) + text
         if children:
             nav_item = nav.li()
             nav_item + nav_links(current_url, children)

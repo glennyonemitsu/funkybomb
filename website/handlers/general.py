@@ -1,6 +1,6 @@
 from funkybomb import Template, Text
 
-from application.util import route
+from application.util import route, url
 from templates import documentation
 from templates.util import row_cols, show_python, show_html, template
 
@@ -102,7 +102,7 @@ async def home(req):
             if i == 0:
                 fu_links + (link[0] + ' ')
             else:
-                fu_links.a(href=link[1]) + link[0]
+                fu_links.a(href=url(link[1])) + link[0]
                 if i < (len(item['links']) - 1):
                     fu_links + ', '
 
