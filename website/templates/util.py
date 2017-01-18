@@ -7,7 +7,6 @@ from pygments import highlight
 from pygments.lexers import HtmlLexer, PythonLexer, TextLexer
 from pygments.formatters import HtmlFormatter
 
-from application import constants
 from application.util import url
 
 
@@ -72,6 +71,9 @@ def nav_links_new():
         nav.li.p(_class='mt-3 mb-1') + name
         for u, text in links:
             nav.li.a(href=url(u)) + text
+
+    nav.li.p(_class='mt-3 mb-1') + 'Other'
+    nav.li.a(href='https://github.com/glennyonemitsu/funkybomb') + 'GitHub'
 
     return tmpl
 
