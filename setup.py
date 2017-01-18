@@ -2,8 +2,8 @@ from setuptools import setup
 
 
 setup(
-    name='Funky Bomb',
-    version='0.2.1',
+    name='funkybomb',
+    version='0.1',
     description='Quick and wild HTML tree growth',
     author='Glenn Yonemitsu',
     license='Apache License 2.0',
