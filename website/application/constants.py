@@ -8,9 +8,9 @@ nav_links = (
             ('/docs/basics/utilities', 'Utilities', ()),
         )),
         ('/docs/patterns', 'Common Patterns', (
-            ('/docs/patterns/reusability', 'Reusability', ()),
+            ('/docs/patterns/abstraction', 'Abstractions', ()),
             ('/docs/patterns/composition', 'Composition', ()),
-            ('/docs/patterns/abstractions', 'Abstractions', ()),
+            ('/docs/patterns/reusability', 'Reusability', ()),
         )),
         ('/docs/integrations', 'Integrations', (
             ('/docs/integrations/flask', 'Flask', ()),

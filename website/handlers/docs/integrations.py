@@ -9,7 +9,7 @@ from templates.util import template
 @template(documentation.tmpl)
 async def docs_integrations_home(req):
     tmpl = Template()
-    tmpl.p + 'hi'
+    tmpl.p + 'Coming soon.'
 
     return {
         'content': tmpl,
@@ -21,7 +21,7 @@ async def docs_integrations_home(req):
 @template(documentation.tmpl)
 async def docs_integrations_flask(req):
     tmpl = Template()
-    tmpl.p + 'hi'
+    tmpl.p + 'Coming soon.'
 
     return {
         'content': tmpl,

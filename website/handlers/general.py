@@ -1,4 +1,4 @@
-from funkybomb import Tag, Template, Text
+from funkybomb import Template, Text
 
 from application.util import route
 from templates import documentation
@@ -31,9 +31,9 @@ async def home(req):
         ),
         'links': (
             ('Common patterns:',),
-            ('Reusability', '/docs/basics/syntax'),
-            ('Composition', '/docs/basics/templating'),
-            ('Abstractions', '/docs/basics/utilities'),
+            ('Abstractions', '/docs/patterns/abstractions'),
+            ('Composition', '/docs/patterns/composition'),
+            ('Reusability', '/docs/patterns/reusability'),
         )
     })
 
@@ -46,7 +46,7 @@ async def home(req):
         ),
         'links': (
             ('Examples:',),
-            ('Flask', '/docs/basics/syntax'),
+            ('Flask', '/docs/integrations/flask'),
         )
     })
 
@@ -91,9 +91,7 @@ async def home(req):
     fu = row_cols(content)
 
     fu.p(_class='lead mt-5 mb-5') + \
-        'That is it! No other HTML template or code involved. See how you ' + \
-        'can ' + (Tag('a', href='/docs/basics/quick-start') + 'get started') + \
-        '.'
+        'That is it! No other HTML template or code involved.'
 
     for item in followups:
         fu.p(_class='h4 mt-5') + item['header']
@@ -118,7 +116,7 @@ async def home(req):
 @template(documentation.tmpl)
 async def docs_home(req):
     tmpl = Template()
-    tmpl.p + 'hi'
+    tmpl.p + 'Coming soon'
 
     return {
         'content': tmpl,

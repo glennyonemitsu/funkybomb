@@ -9,7 +9,7 @@ from templates.util import template
 @template(documentation.tmpl)
 async def docs_patterns_home(req):
     tmpl = Template()
-    tmpl.p + 'hi'
+    tmpl.p + 'Coming soon.'
 
     return {
         'content': tmpl,
@@ -21,7 +21,7 @@ async def docs_patterns_home(req):
 @template(documentation.tmpl)
 async def docs_patterns_reusability(req):
     tmpl = Template()
-    tmpl.p + 'hi'
+    tmpl.p + 'Coming soon.'
 
     return {
         'content': tmpl,
@@ -33,7 +33,7 @@ async def docs_patterns_reusability(req):
 @template(documentation.tmpl)
 async def docs_patterns_composition(req):
     tmpl = Template()
-    tmpl.p + 'hi'
+    tmpl.p + 'Coming soon.'
 
     return {
         'content': tmpl,
@@ -41,13 +41,13 @@ async def docs_patterns_composition(req):
     }
 
 
-@route('/docs/patterns/abstractions')
+@route('/docs/patterns/abstraction')
 @template(documentation.tmpl)
-async def docs_patterns_abstractions(req):
+async def docs_patterns_abstraction(req):
     tmpl = Template()
-    tmpl.p + 'hi'
+    tmpl.p + 'Coming soon.'
 
     return {
         'content': tmpl,
-        'headline': Text('Abstractions')
+        'headline': Text('Abstraction')
     }

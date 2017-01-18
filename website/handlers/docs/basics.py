@@ -7,6 +7,18 @@ from templates.util import (
 )
 
 
+@route('/docs/basics')
+@template(documentation.tmpl)
+async def docs_basics_home(req):
+    t = Template()
+    t + p('Coming soon.')
+
+    return {
+        'content': t,
+        'headline': Text('Basics')
+    }
+
+
 @route('/docs/basics/installation')
 @template(documentation.tmpl)
 async def docs_basics_installation(req):
@@ -322,4 +334,16 @@ async def docs_basics_templating(req):
     return {
         'content': t,
         'headline': Text('Templating')
+    }
+
+
+@route('/docs/basics/utilities')
+@template(documentation.tmpl)
+async def docs_basics_utilities(req):
+    t = Template()
+    t + p('Coming soon.')
+
+    return {
+        'content': t,
+        'headline': Text('Utilities')
     }
