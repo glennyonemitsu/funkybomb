@@ -14,12 +14,12 @@ def test_auto_append():
     """
     r = R()
     r.foo
-    assert len(r._children) == 1
+    assert len(r._children_) == 1
 
     # this makes another foo child, not append to it
     r.foo.bar
-    assert len(r._children) == 2
-    assert len(r._children[1]._children) == 1
+    assert len(r._children_) == 2
+    assert len(r._children_[1]._children_) == 1
 
 
 def test_text_wash():
@@ -27,15 +27,7 @@ def test_text_wash():
     String appends are converted to Text nodes.
     """
     r = R()
-    r + 'this is a text node'
-    assert type(r._children[0]) == Text
-    r + 'this is another text node'
-    assert type(r._children[1]) == Text
-
-
-def test_attrs():
-    r = R(foo='bar')
-    assert r._attrs['foo'] == 'bar'
-
-    r.foo(level='child')
-    assert r._children[0]._attrs == {'level': 'child'}
+    r += 'this is a text node'
+    assert type(r._children_[0]) == Text
+    r += 'this is another text node'
+    assert type(r._children_[1]) == Text

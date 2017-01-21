@@ -7,8 +7,9 @@ from funkybomb.util import render
 def test_templates():
     r = Template()
     h = r.html
-    h.p + 'this is a test'
-    h.foo(foo='bar') + 'this is another'
+    h.p += 'this is a test'
+    foo = h.foo(foo='bar')
+    foo += 'this is another'
     output = render(r, pretty=False)
     expected = (
         '<html>'
@@ -19,15 +20,22 @@ def test_templates():
     assert output == expected
 
 
+def test_add_basic():
+    r = Tag('p') + 'hi'
+    output = render(r, pretty=False)
+    assert output == '<p>hi</p>'
+
+
 def test_add_magic():
     r = Template()
     h = r.html
-    h.p + ('this ', 'is ', 'a ', (Tag('em') + 'test'))
-    h.foo(foo='bar') + 'this is another'
+    h.p += ('this ', 'is ', 'a ', (Tag('em') + 'test'))
+    foo = h.foo(foo='bar')
+    foo += 'this is another'
     bar = h.bar
-    bar + 'foo'
-    bar + 'bar'
-    bar + 'baz'
+    bar += 'foo'
+    bar += 'bar'
+    bar += 'baz'
     output = render(r, pretty=False)
     expected = (
         '<html>'
@@ -42,12 +50,12 @@ def test_add_magic():
 def test_templates_advanced():
     r = Template()
     h = r.html
-    h.p + 'this is a test'
+    h.p += 'this is a test'
     table = h.table
     for i in range(2):
         tr = table.tr
         for j in range(3):
-            tr.td + 'row {row} col {col}'.format(row=i, col=j)
+            tr.td += 'row {row} col {col}'.format(row=i, col=j)
     output = render(r, pretty=False)
     expected = (
         '<html>'
@@ -65,8 +73,8 @@ def test_blocks_default():
     r = Template()
     h = r.html
     foo = Template('foo')
-    foo.p + 'default'
-    h + foo
+    foo.p += 'default'
+    h += foo
     output = render(r, pretty=False)
     expected = '<html><p>default</p></html>'
     assert output == expected
@@ -76,11 +84,11 @@ def test_blocks_content():
     r = Template()
     h = r.html
     foo = Template('foo')
-    foo.p + 'default'
-    h + foo
+    foo.p += 'default'
+    h += foo
 
     data = Tag('div')
-    data + 'this is overwritten'
+    data += 'this is overwritten'
 
     context = {'foo': data}
     output = render(r, context=context, pretty=False)
@@ -91,13 +99,11 @@ def test_blocks_content():
 def test_blocks_tag_content():
     r = Template()
     h = r.html
-    h.foo = Template('foo') + 'default'
+    h += Template('foo') + 'default'
 
     context = {'foo': Tag('p') + 'this is overwritten'}
     output = render(r, context=context, pretty=False)
     expected = '<html><p>this is overwritten</p></html>'
-    print(output)
-    print(expected)
     assert output == expected
 
 
@@ -105,8 +111,8 @@ def test_blocks_text_content():
     r = Template()
     h = r.html
     foo = Template('foo')
-    foo.p + 'default'
-    h + foo
+    foo.p += 'default'
+    h += foo
 
     context = {'foo': Text('this is overwritten')}
     output = render(r, context=context, pretty=False)

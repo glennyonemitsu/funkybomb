@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from funkybomb.exceptions import ChildNodeError
 
 
@@ -16,13 +18,12 @@ class Node:
     def __getattr__(self, key):
         if key in self.__dict__:
             return self.__dict__[key]
-        return None
+        return super().__getattr__(key)
 
     def __setattr__(self, key, value):
         if key.startswith('_') and key.endswith('_'):
             self.__dict__[key] = value
             return
-        super().__setattr__(key, value)
 
     def __repr__(self):
         """
@@ -38,7 +39,17 @@ class Node:
         """
         Append nodes from the += notation.
         """
+        cn = deepcopy(self)
+        cn._append_(*nodes)
+        return cn
 
+        # supports: self + ('foo', 'bar', Tag('em') + 'baz') notation
+        if len(nodes) == 1 and type(nodes[0]) == tuple:
+            nodes = nodes[0]
+        self._append_(*nodes)
+        return self
+
+    def __iadd__(self, *nodes):
         # supports: self + ('foo', 'bar', Tag('em') + 'baz') notation
         if len(nodes) == 1 and type(nodes[0]) == tuple:
             nodes = nodes[0]
@@ -62,37 +73,45 @@ class Renderable(Node):
 
     def __init__(self, **attrs):
         super().__init__()
+        self._tag_ = None
         self._attrs_ = attrs
-        self._opener_ = ''
-        self._closer_ = ''
-
-    def __setattrz__(self, key, value):
-        if value is None:
-            return
-
-        if key.startswith('_') and key.endswith('_'):
-            super().__setattr__(key, value)
-            return
-
-        self._append_(value)
 
     def __getattr__(self, key):
-
         # required for a bunch of magic methods quirks like with deepcopy()
-        if key.startswith('_') and key.endswith('_'):
+        if key.startswith('__') and key.endswith('__'):
             return super().__getattr__(key)
 
         if hide_attribute(key):
             return None
 
+        if key == '_opener_':
+            return self._make_opener_()
+        if key == '_closer_':
+            return self._make_closer_()
+
         n = Tag(key)
         self._append_(n)
         return n
 
-    def __call__(self, *args, **kwargs):
+    def __call__(self, *args, **attrs):
         self._append_(*args)
-        self._attrs_.update(kwargs)
+        self._attrs_.update(attrs)
         return self
+
+    def _make_closer_(self):
+        if self._tag_ is None or self._void_:
+            return ''
+        return '</{tag}>'.format(tag=self._tag_)
+
+    def _make_opener_(self):
+        if self._tag_ is None:
+            return ''
+
+        if not self._attrs_:
+            return '<{tag}>'.format(tag=self._tag_)
+
+        attrs = build_attrs(self._attrs_)
+        return '<{tag} {attrs}>'.format(tag=self._tag_, attrs=attrs)
 
     def _wash_nodes_(self, *nodes):
         text_types = {str, int, float}
@@ -130,26 +149,12 @@ class Tag(Renderable):
 
     _raw_text_tags_ = {'script', 'style'}
 
-    def __init__(self, tag=None, **attrs):
-        super().__init__(**attrs)
+    def __init__(self, tag=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self._tag_ = tag
         self._void_ = self._tag_ in self._void_tags_
         self._raw_text_ = self._tag_ in self._raw_text_tags_
         self._repr_ = '<TagNode[{tag}]>'.format(tag=tag)
-
-        if self._tag_ is None:
-            self._opener_ = ''
-        elif not self._attrs_:
-            self._opener_ = '<{tag}>'.format(tag=self._tag_)
-        else:
-            attrs = build_attrs(self._attrs_)
-            self._opener_ = '<{tag} {attrs}>'.format(
-                tag=self._tag_, attrs=attrs)
-
-        if self._tag_ is None or self._void_:
-            self._closer_ = ''
-        else:
-            self._closer_ = '</{tag}>'.format(tag=self._tag_)
 
     def __repr__(self):
         return self._repr_
