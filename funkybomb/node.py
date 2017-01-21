@@ -36,18 +36,12 @@ class Node:
         """
         Append nodes from the += notation.
         """
+
         cn = deepcopy(self)
         cn._append_(*nodes)
         return cn
 
-        # supports: self + ('foo', 'bar', Tag('em') + 'baz') notation
-        if len(nodes) == 1 and type(nodes[0]) == tuple:
-            nodes = nodes[0]
-        self._append_(*nodes)
-        return self
-
     def __iadd__(self, *nodes):
-        # supports: self + ('foo', 'bar', Tag('em') + 'baz') notation
         if len(nodes) == 1 and type(nodes[0]) == tuple:
             nodes = nodes[0]
         self._append_(*nodes)
@@ -151,10 +145,9 @@ class Tag(Renderable):
         self._tag_ = tag
         self._void_ = self._tag_ in self._void_tags_
         self._raw_text_ = self._tag_ in self._raw_text_tags_
-        self._repr_ = '<TagNode[{tag}]>'.format(tag=tag)
 
     def __repr__(self):
-        return self._repr_
+        return '<TagNode[{tag}]>'.format(tag=self._tag_)
 
     def _wash_nodes_(self, *nodes):
         if self._void_ and nodes:
