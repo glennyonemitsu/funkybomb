@@ -32,9 +32,6 @@ class Node:
 
         return '<BaseNode>'
 
-    def __iter__(self):
-        return iter(self._children_)
-
     def __add__(self, *nodes):
         """
         Append nodes from the += notation.

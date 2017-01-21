@@ -1,4 +1,5 @@
 from funkybomb.node import Node
+from funkybomb.util import children
 
 
 def test_adding_children():
@@ -20,21 +21,9 @@ def test_adding_children():
     assert len(root._children_) == 7
 
 
-def test_root():
-    root = Node()
-    n = Node()
-    root += n
-    # assert n._root_ == root
-
-    n._append_(Node(), Node(), Node())
-    for child in n._children_:
-        # assert child._root_ == root
-        pass
-
-
 def test_children_iteration():
-    children = [Node() for i in range(5)]
+    node_children = [Node() for i in range(5)]
     root = Node()
-    root._append_(*children)
-    for i, node in enumerate(root):
-        assert node is children[i]
+    root._append_(*node_children)
+    for i, node in enumerate(children(root)):
+        assert node is node_children[i]

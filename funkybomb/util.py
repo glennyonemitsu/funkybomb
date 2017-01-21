@@ -14,7 +14,7 @@ def generate(node, prefix, indent, context):
     if node._opener_ and node._closer_:
         new_prefix += indent
 
-    for child in node:
+    for child in children(node):
         for output in generate(child, new_prefix, indent, context):
             yield output
 
@@ -33,3 +33,7 @@ def freeze(node):
     node._children_ = tuple(node._children_)
     for child in node:
         freeze(child)
+
+
+def children(node):
+    return iter(node._children_)
