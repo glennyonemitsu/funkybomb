@@ -33,7 +33,7 @@ def render(node, context=None, pretty=False):
 
 def freeze(node):
     node._children_ = tuple(node._children_)
-    for child in node:
+    for child in children(node):
         freeze(child)
 
 

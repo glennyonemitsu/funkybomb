@@ -17,22 +17,25 @@ def row_cols(node, *cols):
     divs = []
     for col in cols:
         col_class = 'col-md-{width}'.format(width=col)
-        divs.append(row.div(_class=col_class))
+        div = Tag('div', _class=col_class)
+        row += div
+        divs.append(div)
     return divs
 
 
 def nav_links(current_url, links):
     tmpl = Template()
-    nav = tmpl.ul(_class='list-unstyled')
+    nav = Tag('ul', _class='list-unstyled')
+    tmpl += nav
     for href, text, children in links:
         nav_item = nav.li()
         _class = ''
         if url == current_url:
             _class += 'active'
-        nav_item.a(_class=_class, href=url(href)) + text
+        nav_item += Tag('a', text, _class=_class, href=url(href))
         if children:
             nav_item = nav.li()
-            nav_item + nav_links(current_url, children)
+            nav_item += nav_links(current_url, children)
     return nav
 
 
@@ -64,16 +67,18 @@ def nav_links_new():
     )
 
     tmpl = Template()
-    nav = tmpl.ul(_class='list-unstyled')
-    nav.li.a(href=url('/')) + 'Funky Bomb'
+    nav = Tag('ul', _class='list-unstyled')
+    tmpl += nav
+    nav.li += Tag('a', href=url('/')) + 'Funky Bomb'
 
     for name, links in nav_groups:
-        nav.li.p(_class='mt-3 mb-1') + name
+        nav.li += Tag('p', _class='mt-3 mb-1') + name
         for u, text in links:
-            nav.li.a(href=url(u)) + text
+            nav.li += Tag('a', href=url(u)) + text
 
-    nav.li.p(_class='mt-3 mb-1') + 'Other'
-    nav.li.a(href='https://github.com/glennyonemitsu/funkybomb') + 'GitHub'
+    nav.li += Tag('p', _class='mt-3 mb-1') + 'Other'
+    nav.li += Tag('a', href='https://github.com/glennyonemitsu/funkybomb') + \
+        'GitHub'
 
     return tmpl
 
@@ -126,5 +131,5 @@ def header(text, level=2):
 def p(*texts):
     tmpl = Template()
     for p in texts:
-        tmpl.p + html.escape(p)
+        tmpl.p += html.escape(p)
     return tmpl

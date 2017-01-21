@@ -1,4 +1,4 @@
-from funkybomb import Template, Text
+from funkybomb import Tag, Template, Text
 
 from application.util import route, url
 from templates import documentation
@@ -82,29 +82,29 @@ async def home(req):
 
     pitch_python, pitch_html = row_cols(content, 6, 6)
 
-    pitch_python.p(_class='h5') + 'Use Native Python'
-    pitch_python + example_funky
+    pitch_python += Tag('p', _class='h5') + 'Use Native Python'
+    pitch_python += example_funky
 
-    pitch_html.p(_class='h5') + 'Create HTML Pages'
-    pitch_html + example_html
+    pitch_html += Tag('p', _class='h5') + 'Create HTML Pages'
+    pitch_html += example_html
 
     fu = row_cols(content)
 
-    fu.p(_class='lead mt-5 mb-5') + \
+    fu += Tag('p', _class='lead mt-5 mb-5') + \
         'That is it! No other HTML template or code involved.'
 
     for item in followups:
-        fu.p(_class='h4 mt-5') + item['header']
-        fu.p + item['content']
+        fu += Tag('p', _class='h4 mt-5') + item['header']
+        fu.p += item['content']
         fu_links = fu.p
 
         for i, link in enumerate(item['links']):
             if i == 0:
-                fu_links + (link[0] + ' ')
+                fu_links += (link[0] + ' ')
             else:
-                fu_links.a(href=url(link[1])) + link[0]
+                fu_links += Tag('a', href=url(link[1])) + link[0]
                 if i < (len(item['links']) - 1):
-                    fu_links + ', '
+                    fu_links += ', '
 
     return {
         'content': content,
@@ -116,7 +116,7 @@ async def home(req):
 @template(documentation.tmpl)
 async def docs_home(req):
     tmpl = Template()
-    tmpl.p + 'Coming soon'
+    tmpl.p += 'Coming soon'
 
     return {
         'content': tmpl,

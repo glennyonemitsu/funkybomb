@@ -8,22 +8,26 @@ class Node:
     The building block of tree based templating.
     """
 
-    def __init__(self):
+    def __init__(self, *nodes):
         """
         Initialize the Node.
         """
 
         self._children_ = []
+        self._append_(*nodes)
 
     def __getattr__(self, key):
+        print('node getting', key, 'in', self.__dict__)
         if key in self.__dict__:
+            print('node found', key)
             return self.__dict__[key]
-        return super().__getattr__(key)
+        print('node not found', key)
+        return object().__getattr__(key)
 
     def __setattr__(self, key, value):
         if key.startswith('_') and key.endswith('_'):
+            print('node setting', key, value)
             self.__dict__[key] = value
-            return
 
     def __repr__(self):
         """
@@ -52,6 +56,7 @@ class Node:
             yield node
 
     def _append_(self, *nodes):
+        print('appending', nodes)
         if len(nodes) == 1 and type(nodes[0]) is list:
             nodes = nodes[0]
         self._children_.extend(list(self._wash_nodes_(*nodes)))
@@ -62,10 +67,19 @@ class Renderable(Node):
     def __repr__(self):
         return '<RenderableNode>'
 
-    def __init__(self, **attrs):
-        super().__init__()
+    def __init__(self, *args, **attrs):
+        super().__init__(*args)
+        self._void_ = False
         self._tag_ = None
         self._attrs_ = attrs
+
+    def __setattr__(self, key, value):
+        if key.startswith('_') and key.endswith('_'):
+            print('renderable setting', key, value)
+            self.__dict__[key] = value
+            print('renderable set', self.__dict__)
+            return
+        super().__setattr__(key, value)
 
     def __getattr__(self, key):
         # required for a bunch of magic methods quirks like with deepcopy()
@@ -79,6 +93,14 @@ class Renderable(Node):
             return self._make_opener_()
         if key == '_closer_':
             return self._make_closer_()
+
+        if key.startswith('_') and key.endswith('_'):
+            print('renderable getting', key, 'in', self.__dict__)
+            if key in self.__dict__:
+                print('renderable found', key)
+                return self.__dict__[key]
+            print('renderable not found', key)
+            return super().__getattr__(key)
 
         n = Tag(key)
         self._append_(n)

@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='funkybomb',
-    version='0.1',
+    version='0.1.1',
     description='Quick and wild HTML tree growth',
     author='Glenn Yonemitsu',
     license='Apache License 2.0',

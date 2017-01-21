@@ -5,7 +5,7 @@ from templates.util import row_cols
 
 
 tmpl = Template()
-tmpl + '<!DOCTYPE html>'
+tmpl += '<!DOCTYPE html>'
 html = tmpl.html
 
 
@@ -20,8 +20,8 @@ styles = (
 
 for style in styles:
     head.link(rel="stylesheet", href=style, crossorigin="anonymous")
-head.style + HtmlFormatter(style='colorful').get_style_defs('.highlight')
-head.style + '''
+head.style += HtmlFormatter(style='colorful').get_style_defs('.highlight')
+head.style += '''
 .nav-links ul { margin-left: 0;}
 .nav-links ul ul { margin-left: 1.2rem;}
 .highlight { padding: 1.4rem; background-color: #f2f2f2; }
@@ -43,10 +43,10 @@ for script in scripts:
 hb = html.body
 container = hb.div(_class='container')
 main = row_cols(container)
-main + Template('base main')
+main += Template('base main')
 
 
 # components - footer
 footer = row_cols(main)
 div = footer.div(id='footer')
-div + Template('base footer')
+div += Template('base footer')
