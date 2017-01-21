@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from funkybomb.node import Template
 
 
@@ -37,3 +39,15 @@ def freeze(node):
 
 def children(node):
     return iter(node._children_)
+
+
+def copy(node):
+    return deepcopy(node)
+
+
+def bind_template(node, name, value):
+    for i, child in enumerate(children(node)):
+        if isinstance(child, Template) and child._name_ == name:
+            node._children_[i] = value
+        else:
+            bind_template(child, name, value)
