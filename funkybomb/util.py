@@ -5,23 +5,23 @@ from funkybomb.node import Template
 
 def generate(node, prefix, indent, context):
 
-    if isinstance(node, Template) and node._name_ and context and \
+    if isinstance(node, Template) and node.name and context and \
             node._name_ in context:
-        node = context[node._name_]
+        node = context[node.name]
 
-    if node._opener_:
-        yield prefix + node._opener_
+    if node.opener:
+        yield prefix + node.opener
 
     new_prefix = prefix
-    if node._opener_ and node._closer_:
+    if node.opener and node.closer:
         new_prefix += indent
 
-    for child in children(node):
+    for child in node.children:
         for output in generate(child, new_prefix, indent, context):
             yield output
 
-    if node._closer_:
-        yield prefix + node._closer_
+    if node.closer:
+        yield prefix + node.closer
 
 
 def render(node, context=None, pretty=False):
@@ -32,13 +32,9 @@ def render(node, context=None, pretty=False):
 
 
 def freeze(node):
-    node._children_ = tuple(node._children_)
-    for child in children(node):
+    node.children = tuple(node.children)
+    for child in node.children:
         freeze(child)
-
-
-def children(node):
-    return iter(node._children_)
 
 
 def copy(node):
@@ -46,8 +42,8 @@ def copy(node):
 
 
 def bind_template(node, name, value):
-    for i, child in enumerate(children(node)):
-        if isinstance(child, Template) and child._name_ == name:
-            node._children_[i] = value
+    for i, child in enumerate(node.children):
+        if isinstance(child, Template) and child.name == name:
+            node.children[i] = value
         else:
             bind_template(child, name, value)

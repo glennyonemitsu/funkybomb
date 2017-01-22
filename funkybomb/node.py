@@ -13,167 +13,108 @@ class Node:
         Initialize the Node.
         """
 
-        self._children_ = []
-        self._append_(*nodes)
-
-    def __getattr__(self, key):
-        print('node getting', key, 'in', self.__dict__)
-        if key in self.__dict__:
-            print('node found', key)
-            return self.__dict__[key]
-        print('node not found', key)
-        return object().__getattr__(key)
-
-    def __setattr__(self, key, value):
-        if key.startswith('_') and key.endswith('_'):
-            print('node setting', key, value)
-            self.__dict__[key] = value
+        self.children = []
+        self.append(*nodes)
 
     def __repr__(self):
-        """
-        String representation of the Node.
-        """
-
         return '<BaseNode>'
 
-    def __add__(self, *nodes):
-        """
-        Append nodes from the += notation.
-        """
+    def __call__(self, *args, **attrs):
+        self.append(*args)
+        return self
 
+    def __add__(self, *nodes):
         cn = deepcopy(self)
-        cn._append_(*nodes)
+        cn.append(*nodes)
         return cn
 
     def __iadd__(self, *nodes):
         if len(nodes) == 1 and type(nodes[0]) == tuple:
             nodes = nodes[0]
-        self._append_(*nodes)
+        self.append(*nodes)
         return self
 
-    def _wash_nodes_(self, *nodes):
-        for node in nodes:
-            yield node
-
-    def _append_(self, *nodes):
-        print('appending', nodes)
+    def append(self, *nodes):
+        if not nodes:
+            return
         if len(nodes) == 1 and type(nodes[0]) is list:
             nodes = nodes[0]
-        self._children_.extend(list(self._wash_nodes_(*nodes)))
+        self.children.extend(list(self.wash_nodes(*nodes)))
 
-
-class Renderable(Node):
-
-    def __repr__(self):
-        return '<RenderableNode>'
-
-    def __init__(self, *args, **attrs):
-        super().__init__(*args)
-        self._void_ = False
-        self._tag_ = None
-        self._attrs_ = attrs
-
-    def __setattr__(self, key, value):
-        if key.startswith('_') and key.endswith('_'):
-            print('renderable setting', key, value)
-            self.__dict__[key] = value
-            print('renderable set', self.__dict__)
-            return
-        super().__setattr__(key, value)
-
-    def __getattr__(self, key):
-        # required for a bunch of magic methods quirks like with deepcopy()
-        if key.startswith('__') and key.endswith('__'):
-            return super().__getattr__(key)
-
-        if hide_attribute(key):
-            return None
-
-        if key == '_opener_':
-            return self._make_opener_()
-        if key == '_closer_':
-            return self._make_closer_()
-
-        if key.startswith('_') and key.endswith('_'):
-            print('renderable getting', key, 'in', self.__dict__)
-            if key in self.__dict__:
-                print('renderable found', key)
-                return self.__dict__[key]
-            print('renderable not found', key)
-            return super().__getattr__(key)
-
-        n = Tag(key)
-        self._append_(n)
-        return n
-
-    def __call__(self, *args, **attrs):
-        self._append_(*args)
-        self._attrs_.update(attrs)
-        return self
-
-    def _make_closer_(self):
-        if self._tag_ is None or self._void_:
-            return ''
-        return '</{tag}>'.format(tag=self._tag_)
-
-    def _make_opener_(self):
-        if self._tag_ is None:
-            return ''
-
-        if not self._attrs_:
-            return '<{tag}>'.format(tag=self._tag_)
-
-        attrs = build_attrs(self._attrs_)
-        return '<{tag} {attrs}>'.format(tag=self._tag_, attrs=attrs)
-
-    def _wash_nodes_(self, *nodes):
-        text_types = {str, int, float}
+    def wash_nodes(self, *nodes):
+        text_types = {bytes, str, int, float}
         for node in nodes:
             if type(node) in text_types:
                 yield Text(node)
-            else:
+            elif type(node) is type:
+                yield node()
+            elif isinstance(node, Node):
                 yield node
+            else:
+                raise ChildNodeError()
 
 
-class Template(Renderable):
+class Template(Node):
 
-    def __init__(self, name=None):
-        super().__init__()
-        self._name_ = name
+    def __init__(self, name=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.name = name
 
     def __repr__(self):
-        if self._name_:
-            return '<TemplateNode[{name}]>'.format(name=self._name_)
+        if self.name:
+            return '<TemplateNode[{name}]>'.format(name=self.name)
         else:
             return '<AnonymousTemplateNode>'
 
 
-class Tag(Renderable):
+class Tag(Node):
 
-    # html 5 tag categories according to
-    # https://www.w3.org/TR/html5/syntax.html#void-elements
-    _void_tags_ = {
-        'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen',
-        'link', 'meta', 'param', 'source', 'track', 'wbr'
-    }
+    is_void = False
+    is_raw_text = False
+    tag = None
+    attrs = None
 
-    _raw_text_tags_ = {'script', 'style'}
-
-    def __init__(self, tag=None, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._tag_ = tag
-        self._void_ = self._tag_ in self._void_tags_
-        self._raw_text_ = self._tag_ in self._raw_text_tags_
+    def __init__(self, tag=None, *args, **attrs):
+        super().__init__(*args)
+        if tag:
+            self.tag = tag
+        self.attrs = attrs
 
     def __repr__(self):
-        return '<TagNode[{tag}]>'.format(tag=self._tag_)
+        return '<TagNode[{tag}]>'.format(tag=self.tag)
 
-    def _wash_nodes_(self, *nodes):
-        if self._void_ and nodes:
+    @property
+    def closer(self):
+        if self.tag is None or self.is_void:
+            return ''
+        return '</{tag}>'.format(tag=self.tag)
+
+    @property
+    def opener(self):
+        if self.tag is None:
+            return ''
+
+        if not self.attrs:
+            return '<{tag}>'.format(tag=self.tag)
+
+        pairs = []
+        for key, value in self.attrs.items():
+            if key == '_class':
+                key = 'class'
+            pairs.append((key, value))
+        attrs = ' '.join(
+            '{key}="{value}"'.format(key=key, value=value)
+            for key, value in pairs)
+        return '<{tag} {attrs}>'.format(tag=self.tag, attrs=attrs)
+
+    def wash_nodes(self, *nodes):
+        if self.is_void and nodes:
             raise ChildNodeError()
-        elif self._raw_text_:
-            text_types = {str, int, float}
+        elif self.is_raw_text:
+            text_types = {bytes, str, int, float}
             for node in nodes:
+                if type(node) is type:
+                    node = node()
                 if type(node) in text_types:
                     yield Text(node)
                 elif type(node) is Text:
@@ -181,46 +122,21 @@ class Tag(Renderable):
                 else:
                     raise ChildNodeError()
         else:
-            for node in super()._wash_nodes_(*nodes):
+            for node in super().wash_nodes(*nodes):
                 yield node
 
 
-class Text(Renderable):
+class Text(Node):
+
+    content = ''
 
     def __init__(self, content=''):
         super().__init__()
-        self._content_ = str(content)
-        self._opener_ = str(content)
+        self.content = str(content)
+        self.opener = str(content)
 
     def __repr__(self):
-        return '<TextNode["{text}"]>'.format(text=self._content_)
+        return '<TextNode["{text}"]>'.format(text=self.content)
 
-
-def build_attrs(attrs):
-    pairs = []
-    for key, value in attrs.items():
-        if key == '_class':
-            key = 'class'
-        pairs.append((key, value))
-    attrs = ' '.join(
-        '{key}="{value}"'.format(key=key, value=value)
-        for key, value in pairs)
-    return attrs
-
-
-def hide_attribute(key):
-    if is_ipython():
-        if key.startswith('_ipython_'):
-            return True
-        if key.startswith('_repr_'):
-            return True
-    return False
-
-
-def is_ipython():
-    try:
-        __IPYTHON__
-    except NameError:
-        return False
-    else:
-        return True
+    def wash_nodes(self, *nodes):
+        raise ChildNodeError()
