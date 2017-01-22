@@ -1,590 +1,598 @@
 from funkybomb.node import Tag
 
 
-class a(Tag):
+class HtmlTag(Tag):
+
+    def __init__(self, *nodes, **attrs):
+        super().__init__()
+        self.append(*nodes)
+        self.attrs = attrs
+
+
+class a(HtmlTag):
     tag = 'a'
 
 
-class abbr(Tag):
+class abbr(HtmlTag):
     tag = 'abbr'
 
 
-class acronym(Tag):
+class acronym(HtmlTag):
     tag = 'acronym'
 
 
-class address(Tag):
+class address(HtmlTag):
     tag = 'address'
 
 
-class applet(Tag):
+class applet(HtmlTag):
     tag = 'applet'
 
 
-class area(Tag):
+class area(HtmlTag):
     tag = 'area'
     is_void = True
 
 
-class article(Tag):
+class article(HtmlTag):
     tag = 'article'
 
 
-class aside(Tag):
+class aside(HtmlTag):
     tag = 'aside'
 
 
-class audio(Tag):
+class audio(HtmlTag):
     tag = 'audio'
 
 
-class b(Tag):
+class b(HtmlTag):
     tag = 'b'
 
 
-class base(Tag):
+class base(HtmlTag):
     tag = 'base'
     is_void = True
 
 
-class basefont(Tag):
+class basefont(HtmlTag):
     tag = 'basefont'
 
 
-class bdi(Tag):
+class bdi(HtmlTag):
     tag = 'bdi'
 
 
-class bdo(Tag):
+class bdo(HtmlTag):
     tag = 'bdo'
 
 
-class bgsound(Tag):
+class bgsound(HtmlTag):
     tag = 'bgsound'
 
 
-class big(Tag):
+class big(HtmlTag):
     tag = 'big'
 
 
-class blink(Tag):
+class blink(HtmlTag):
     tag = 'blink'
 
 
-class blockquote(Tag):
+class blockquote(HtmlTag):
     tag = 'blockquote'
 
 
-class body(Tag):
+class body(HtmlTag):
     tag = 'body'
 
 
-class br(Tag):
+class br(HtmlTag):
     tag = 'br'
     is_void = True
 
 
-class button(Tag):
+class button(HtmlTag):
     tag = 'button'
 
 
-class canvas(Tag):
+class canvas(HtmlTag):
     tag = 'canvas'
 
 
-class caption(Tag):
+class caption(HtmlTag):
     tag = 'caption'
 
 
-class center(Tag):
+class center(HtmlTag):
     tag = 'center'
 
 
-class cite(Tag):
+class cite(HtmlTag):
     tag = 'cite'
 
 
-class code(Tag):
+class code(HtmlTag):
     tag = 'code'
 
 
-class col(Tag):
+class col(HtmlTag):
     tag = 'col'
     is_void = True
 
 
-class colgroup(Tag):
+class colgroup(HtmlTag):
     tag = 'colgroup'
 
 
-class command(Tag):
+class command(HtmlTag):
     tag = 'command'
 
 
-class content(Tag):
+class content(HtmlTag):
     tag = 'content'
 
 
-class data(Tag):
+class data(HtmlTag):
     tag = 'data'
 
 
-class datalist(Tag):
+class datalist(HtmlTag):
     tag = 'datalist'
 
 
-class dd(Tag):
+class dd(HtmlTag):
     tag = 'dd'
 
 
-class _del(Tag):
+class _del(HtmlTag):
     tag = '_del'
 
 
-class details(Tag):
+class details(HtmlTag):
     tag = 'details'
 
 
-class dfn(Tag):
+class dfn(HtmlTag):
     tag = 'dfn'
 
 
-class dialog(Tag):
+class dialog(HtmlTag):
     tag = 'dialog'
 
 
-class dir(Tag):
+class dir(HtmlTag):
     tag = 'dir'
 
 
-class div(Tag):
+class div(HtmlTag):
     tag = 'div'
 
 
-class dl(Tag):
+class dl(HtmlTag):
     tag = 'dl'
 
 
-class dt(Tag):
+class dt(HtmlTag):
     tag = 'dt'
 
 
-class element(Tag):
+class element(HtmlTag):
     tag = 'element'
 
 
-class em(Tag):
+class em(HtmlTag):
     tag = 'em'
 
 
-class embed(Tag):
+class embed(HtmlTag):
     tag = 'embed'
     is_void = True
 
 
-class fieldset(Tag):
+class fieldset(HtmlTag):
     tag = 'fieldset'
 
 
-class figcaption(Tag):
+class figcaption(HtmlTag):
     tag = 'figcaption'
 
 
-class figure(Tag):
+class figure(HtmlTag):
     tag = 'figure'
 
 
-class font(Tag):
+class font(HtmlTag):
     tag = 'font'
 
 
-class footer(Tag):
+class footer(HtmlTag):
     tag = 'footer'
 
 
-class form(Tag):
+class form(HtmlTag):
     tag = 'form'
 
 
-class frame(Tag):
+class frame(HtmlTag):
     tag = 'frame'
 
 
-class frameset(Tag):
+class frameset(HtmlTag):
     tag = 'frameset'
 
 
-class h1(Tag):
+class h1(HtmlTag):
     tag = 'h1'
 
 
-class h2(Tag):
+class h2(HtmlTag):
     tag = 'h2'
 
 
-class h3(Tag):
+class h3(HtmlTag):
     tag = 'h3'
 
 
-class h4(Tag):
+class h4(HtmlTag):
     tag = 'h4'
 
 
-class h5(Tag):
+class h5(HtmlTag):
     tag = 'h5'
 
 
-class h6(Tag):
+class h6(HtmlTag):
     tag = 'h6'
 
 
-class head(Tag):
+class head(HtmlTag):
     tag = 'head'
 
 
-class header(Tag):
+class header(HtmlTag):
     tag = 'header'
 
 
-class hgroup(Tag):
+class hgroup(HtmlTag):
     tag = 'hgroup'
 
 
-class hr(Tag):
+class hr(HtmlTag):
     tag = 'hr'
     is_void = True
 
 
-class html(Tag):
+class html(HtmlTag):
     tag = 'html'
 
 
-class i(Tag):
+class i(HtmlTag):
     tag = 'i'
 
 
-class iframe(Tag):
+class iframe(HtmlTag):
     tag = 'iframe'
 
 
-class image(Tag):
+class image(HtmlTag):
     tag = 'image'
 
 
-class img(Tag):
+class img(HtmlTag):
     tag = 'img'
     is_void = True
 
 
-class input(Tag):
+class input(HtmlTag):
     tag = 'input'
     is_void = True
 
 
-class ins(Tag):
+class ins(HtmlTag):
     tag = 'ins'
 
 
-class isindex(Tag):
+class isindex(HtmlTag):
     tag = 'isindex'
 
 
-class kbd(Tag):
+class kbd(HtmlTag):
     tag = 'kbd'
 
 
-class keygen(Tag):
+class keygen(HtmlTag):
     tag = 'keygen'
     is_void = True
 
 
-class label(Tag):
+class label(HtmlTag):
     tag = 'label'
 
 
-class legend(Tag):
+class legend(HtmlTag):
     tag = 'legend'
 
 
-class li(Tag):
+class li(HtmlTag):
     tag = 'li'
 
 
-class link(Tag):
+class link(HtmlTag):
     tag = 'link'
     is_void = True
 
 
-class listing(Tag):
+class listing(HtmlTag):
     tag = 'listing'
 
 
-class main(Tag):
+class main(HtmlTag):
     tag = 'main'
 
 
-class map(Tag):
+class map(HtmlTag):
     tag = 'map'
 
 
-class mark(Tag):
+class mark(HtmlTag):
     tag = 'mark'
 
 
-class marquee(Tag):
+class marquee(HtmlTag):
     tag = 'marquee'
 
 
-class menu(Tag):
+class menu(HtmlTag):
     tag = 'menu'
 
 
-class menuitem(Tag):
+class menuitem(HtmlTag):
     tag = 'menuitem'
 
 
-class meta(Tag):
+class meta(HtmlTag):
     tag = 'meta'
     is_void = True
 
 
-class meter(Tag):
+class meter(HtmlTag):
     tag = 'meter'
 
 
-class multicol(Tag):
+class multicol(HtmlTag):
     tag = 'multicol'
 
 
-class nav(Tag):
+class nav(HtmlTag):
     tag = 'nav'
 
 
-class nobr(Tag):
+class nobr(HtmlTag):
     tag = 'nobr'
 
 
-class noembed(Tag):
+class noembed(HtmlTag):
     tag = 'noembed'
 
 
-class noframes(Tag):
+class noframes(HtmlTag):
     tag = 'noframes'
 
 
-class noscript(Tag):
+class noscript(HtmlTag):
     tag = 'noscript'
 
 
-class object(Tag):
+class object(HtmlTag):
     tag = 'object'
 
 
-class ol(Tag):
+class ol(HtmlTag):
     tag = 'ol'
 
 
-class optgroup(Tag):
+class optgroup(HtmlTag):
     tag = 'optgroup'
 
 
-class option(Tag):
+class option(HtmlTag):
     tag = 'option'
 
 
-class output(Tag):
+class output(HtmlTag):
     tag = 'output'
 
 
-class p(Tag):
+class p(HtmlTag):
     tag = 'p'
 
 
-class param(Tag):
+class param(HtmlTag):
     tag = 'param'
     is_void = True
 
 
-class picture(Tag):
+class picture(HtmlTag):
     tag = 'picture'
 
 
-class plaintext(Tag):
+class plaintext(HtmlTag):
     tag = 'plaintext'
 
 
-class pre(Tag):
+class pre(HtmlTag):
     tag = 'pre'
 
 
-class progress(Tag):
+class progress(HtmlTag):
     tag = 'progress'
 
 
-class q(Tag):
+class q(HtmlTag):
     tag = 'q'
 
 
-class rp(Tag):
+class rp(HtmlTag):
     tag = 'rp'
 
 
-class rt(Tag):
+class rt(HtmlTag):
     tag = 'rt'
 
 
-class rtc(Tag):
+class rtc(HtmlTag):
     tag = 'rtc'
 
 
-class ruby(Tag):
+class ruby(HtmlTag):
     tag = 'ruby'
 
 
-class s(Tag):
+class s(HtmlTag):
     tag = 's'
 
 
-class samp(Tag):
+class samp(HtmlTag):
     tag = 'samp'
 
 
-class script(Tag):
+class script(HtmlTag):
     tag = 'script'
     is_raw_text = True
 
 
-class section(Tag):
+class section(HtmlTag):
     tag = 'section'
 
 
-class select(Tag):
+class select(HtmlTag):
     tag = 'select'
 
 
-class shadow(Tag):
+class shadow(HtmlTag):
     tag = 'shadow'
 
 
-class slot(Tag):
+class slot(HtmlTag):
     tag = 'slot'
 
 
-class small(Tag):
+class small(HtmlTag):
     tag = 'small'
 
 
-class source(Tag):
+class source(HtmlTag):
     tag = 'source'
     is_void = True
 
 
-class spacer(Tag):
+class spacer(HtmlTag):
     tag = 'spacer'
 
 
-class span(Tag):
+class span(HtmlTag):
     tag = 'span'
 
 
-class strike(Tag):
+class strike(HtmlTag):
     tag = 'strike'
 
 
-class strong(Tag):
+class strong(HtmlTag):
     tag = 'strong'
 
 
-class style(Tag):
+class style(HtmlTag):
     tag = 'style'
     is_raw_text = True
 
 
-class sub(Tag):
+class sub(HtmlTag):
     tag = 'sub'
 
 
-class summary(Tag):
+class summary(HtmlTag):
     tag = 'summary'
 
 
-class sup(Tag):
+class sup(HtmlTag):
     tag = 'sup'
 
 
-class table(Tag):
+class table(HtmlTag):
     tag = 'table'
 
 
-class tbody(Tag):
+class tbody(HtmlTag):
     tag = 'tbody'
 
 
-class td(Tag):
+class td(HtmlTag):
     tag = 'td'
 
 
-class template(Tag):
+class template(HtmlTag):
     tag = 'template'
 
 
-class textarea(Tag):
+class textarea(HtmlTag):
     tag = 'textarea'
 
 
-class tfoot(Tag):
+class tfoot(HtmlTag):
     tag = 'tfoot'
 
 
-class th(Tag):
+class th(HtmlTag):
     tag = 'th'
 
 
-class thead(Tag):
+class thead(HtmlTag):
     tag = 'thead'
 
 
-class time(Tag):
+class time(HtmlTag):
     tag = 'time'
 
 
-class title(Tag):
+class title(HtmlTag):
     tag = 'title'
 
 
-class tr(Tag):
+class tr(HtmlTag):
     tag = 'tr'
 
 
-class track(Tag):
+class track(HtmlTag):
     tag = 'track'
     is_void = True
 
 
-class tt(Tag):
+class tt(HtmlTag):
     tag = 'tt'
 
 
-class u(Tag):
+class u(HtmlTag):
     tag = 'u'
 
 
-class ul(Tag):
+class ul(HtmlTag):
     tag = 'ul'
 
 
-class var(Tag):
+class var(HtmlTag):
     tag = 'var'
 
 
-class video(Tag):
+class video(HtmlTag):
     tag = 'video'
 
 
-class wbr(Tag):
+class wbr(HtmlTag):
     tag = 'wbr'
     is_void = True
 
 
-class xmp(Tag):
+class xmp(HtmlTag):
     tag = 'xmp'

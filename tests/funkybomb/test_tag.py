@@ -74,6 +74,7 @@ def test_class_append():
     n += img
     n += 'hi'
     n += img
+    print(n.tag)
     assert n.tag == 'p'
     assert len(n.children) == 3
     assert isinstance(n.children[0], img)
@@ -93,3 +94,12 @@ def test_raw_text_restriction():
 
     with raises(ChildNodeError):
         n += p
+
+
+def test_instance_append():
+    n = p('foo')
+    n += p('bar')
+    assert len(n.children) == 2
+    assert isinstance(n.children[0], Text)
+    assert isinstance(n.children[1], p)
+    assert isinstance(n.children[1].children[0], Text)

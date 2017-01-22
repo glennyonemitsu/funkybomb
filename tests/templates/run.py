@@ -1,3 +1,4 @@
+from funkybomb.html5 import html, p, h1
 from funkybomb.node import Tag
 from funkybomb.node import Template
 from funkybomb.node import Text
@@ -6,8 +7,8 @@ from funkybomb.util import render
 
 def test_templates():
     r = Template()
-    h = r.html
-    h.p += 'this is a test'
+    h = html()
+    h += p('this is a test')
     foo = h.foo(foo='bar')
     foo += 'this is another'
     output = render(r, pretty=False)
