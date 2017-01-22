@@ -74,7 +74,16 @@ def test_class_append():
     n += img
     n += 'hi'
     n += img
-    print(n.tag)
+    assert n.tag == 'p'
+    assert len(n.children) == 3
+    assert isinstance(n.children[0], img)
+    assert isinstance(n.children[1], Text)
+    assert isinstance(n.children[2], img)
+
+
+def test_class_append_one_liner():
+    n = p()
+    n += img, 'hi', img
     assert n.tag == 'p'
     assert len(n.children) == 3
     assert isinstance(n.children[0], img)
